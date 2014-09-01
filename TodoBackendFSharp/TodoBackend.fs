@@ -56,16 +56,73 @@ let todoStorage =
         loop [])
 
 open System.IO
+open System.Threading.Tasks
 open Dyfrig
 open Newtonsoft.Json
 
 let serializerSettings = JsonSerializerSettings(ContractResolver = Serialization.CamelCasePropertyNamesContractResolver())
+
 let serialize data =
     JsonConvert.SerializeObject(data, serializerSettings)
     |> Text.Encoding.UTF8.GetBytes
 
+let deserialize<'T> (stream: Stream) =
+    let reader = new StreamReader(stream)
+    let body = reader.ReadToEnd()
+    JsonConvert.DeserializeObject<'T>(body, serializerSettings)
+
+let notFound (env: OwinEnv) =
+    env.[Constants.responseStatusCode] <- 404
+    env.[Constants.responseReasonPhrase] <- "Not Found"
+    Task.FromResult<obj>(null) :> Task
+
+let methodNotAllowed (env: OwinEnv) =
+    env.[Constants.responseStatusCode] <- 405
+    env.[Constants.responseReasonPhrase] <- "Method Not Allowed"
+    Task.FromResult<obj>(null) :> Task
+    
 let getTodos (env: OwinEnv) = async {
     let! todos = todoStorage.PostAndAsyncReply(fun ch -> GetAll ch)
     let result = serialize todos 
     let stream : Stream = unbox env.[Constants.responseBody]
-    do! stream.AsyncWrite result }
+    do! stream.AsyncWrite(result, 0, result.Length) }
+
+type NewTodo =
+    { Title : string
+      Completed : bool
+      Order : int }
+
+let postTodo (env: OwinEnv) =
+    // Retrieve the request body
+    let stream : Stream = unbox env.[Constants.requestBody]
+    let result : NewTodo = deserialize stream
+    // TODO: Handle invalid result
+
+    // Persist the new todo
+    let uri = Uri(sprintf "%s/%i" (unbox env.[Constants.requestPathBase]) result.Order, UriKind.Relative)
+    let todo =
+        { Uri = uri
+          Title = result.Title
+          Completed = result.Completed
+          Order = result.Order }
+    todoStorage.Post (Post todo)
+
+    // Return the new todo item
+    env.[Constants.responseStatusCode] <- 201
+    env.[Constants.responseReasonPhrase] <- "Created"
+    let headers : OwinHeaders = unbox env.[Constants.responseHeaders]
+    headers.Add("Location", [| uri.OriginalString |])
+    let result = serialize todo
+    let stream : Stream = unbox env.[Constants.responseBody]
+    stream.WriteAsync(result, 0, result.Length)
+
+let app (env: OwinEnv) =
+    let path = unbox env.[Constants.requestPath]
+    match path with
+    | "/" ->
+        let httpMethod = unbox env.[Constants.requestMethod]
+        match httpMethod with
+        | "GET" -> getTodos env |> Async.StartAsTask :> Task
+        | "POST" -> postTodo env
+        | _ -> methodNotAllowed env
+    | _ -> notFound env

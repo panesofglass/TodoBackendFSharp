@@ -1,5 +1,6 @@
 ﻿//----------------------------------------------------------------------------
 //
+// Copyright (c) 2013-2014 Ryan Riley (@panesofglass)
 // Copyright (c) 2014 Ryan Riley (@panesofglass)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,7 +35,7 @@ type Startup() =
     member __.Configuration(builder: IAppBuilder) =
         builder
             .UseCors(Cors.CorsOptions.AllowAll)
-            .Use(fun _ -> Dyfrig.OwinAppFunc.fromOwinApp TodoBackend.getTodos)
+            .Use(fun _ -> TodoBackend.app)
             |> ignore
 
 [<assembly: OwinStartupAttribute(typeof<Startup>)>]
