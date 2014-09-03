@@ -1,6 +1,5 @@
 ﻿//----------------------------------------------------------------------------
 //
-// Copyright (c) 2013-2014 Ryan Riley (@panesofglass)
 // Copyright (c) 2014 Ryan Riley (@panesofglass)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,22 +20,26 @@ namespace TodoBackendFSharp
 open System
 open Owin
 open Microsoft.Owin
+open TodoBackend
 
 type Startup() =
 
     // Store some todos for the initial request
-    let initialTodo : TodoBackend.Todo =
+    let initialTodo =
         { Uri = Uri("/1", UriKind.Relative)
           Title = "Create todo items"
           Completed = false
           Order = 1 }
-    do TodoBackend.todoStorage.Post (TodoBackend.TodoOperation.Post initialTodo)
+    do todoStorage.Post (TodoOperation.Post initialTodo)
+
+    let cors next env =
+        Cors.CorsMiddleware(Dyfrig.OwinAppFunc next, Cors.CorsOptions.AllowAll).Invoke env
 
     member __.Configuration(builder: IAppBuilder) =
-        builder
-            .UseCors(Cors.CorsOptions.AllowAll)
-            .Use(fun _ -> TodoBackend.app)
-            |> ignore
+        builder.Use(fun _ ->
+            app
+            |> cors)
+        |> ignore
 
 [<assembly: OwinStartupAttribute(typeof<Startup>)>]
 do ()
