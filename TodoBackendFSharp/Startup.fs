@@ -17,20 +17,11 @@
 
 namespace TodoBackendFSharp
 
-open System
 open Owin
 open Microsoft.Owin
 open TodoBackend
 
 type Startup() =
-
-    // Store some todos for the initial request
-    let initialTodo =
-        { Url = Uri("/1", UriKind.Relative)
-          Title = "Create todo items"
-          Completed = false
-          Order = 1 }
-    do todoStorage.Post (TodoOperation.Post initialTodo)
 
     let cors next env =
         Cors.CorsMiddleware(Dyfrig.OwinAppFunc next, Cors.CorsOptions.AllowAll).Invoke env
