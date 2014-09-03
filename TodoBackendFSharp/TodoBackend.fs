@@ -31,7 +31,7 @@ type TodoOperation =
     | GetAll of reply : AsyncReplyChannel<Todo list>
     | Post of todo : Todo
     | Update of todo : Todo
-    | Delete of uri : Uri
+    | Clear
 
 let todoStorage = 
     Agent<_>.Start(fun inbox -> 
@@ -49,9 +49,8 @@ let todoStorage =
                     let todos' = todos |> List.filter (fun t -> t.Uri = todo.Uri)
                     if todos'.Length = todos.Length then return! loop todos // TODO: Handle the 404 scenario
                     else return! loop (todo :: todos')
-                | Delete uri -> 
-                    let todos' = todos |> List.filter (fun t -> t.Uri = uri)
-                    return! loop todos'
+                | Clear -> 
+                    return! loop []
             }
         loop [])
 
@@ -116,6 +115,12 @@ let postTodo (env: OwinEnv) =
     let stream : Stream = unbox env.[Constants.responseBody]
     stream.WriteAsync(result, 0, result.Length)
 
+let deleteTodos (env: OwinEnv) =
+    todoStorage.Post Clear
+    env.[Constants.responseStatusCode] <- 204
+    env.[Constants.responseReasonPhrase] <- "No Content"
+    Task.FromResult<obj>(null) :> Task
+
 let app (env: OwinEnv) =
     let path = unbox env.[Constants.requestPath]
     match path with
@@ -124,5 +129,6 @@ let app (env: OwinEnv) =
         match httpMethod with
         | "GET" -> getTodos env |> Async.StartAsTask :> Task
         | "POST" -> postTodo env
+        | "DELETE" -> deleteTodos env
         | _ -> methodNotAllowed env
     | _ -> notFound env
