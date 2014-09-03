@@ -22,15 +22,16 @@ open System
 type Agent<'T> = MailboxProcessor<'T>
 
 type Todo = 
-    { Uri : Uri
+    { Url : Uri
       Title : string
       Completed : bool
       Order : int }
 
 type TodoOperation = 
-    | GetAll of reply : AsyncReplyChannel<Todo list>
+    | GetAll of channel: AsyncReplyChannel<Todo[]>
+    | Get of index: int * channel: AsyncReplyChannel<Todo>
     | Post of todo : Todo
-    | Update of todo : Todo
+    | Update of index: int * todo : Todo
     | Clear
 
 let todoStorage = 
@@ -42,17 +43,21 @@ let todoStorage =
                 | GetAll ch -> 
                     ch.Reply todos
                     return! loop todos
+                | Get(index, ch) ->
+                    // TODO: Handle 404 scenario
+                    ch.Reply(todos.[index])
+                    return! loop todos
                 | Post todo -> 
                     // TODO: Return a new URI?
-                    return! loop (todo :: todos)
-                | Update todo -> 
-                    let todos' = todos |> List.filter (fun t -> t.Uri = todo.Uri)
-                    if todos'.Length = todos.Length then return! loop todos // TODO: Handle the 404 scenario
-                    else return! loop (todo :: todos')
+                    return! loop (Array.append todos [|todo|])
+                | Update(index, todo) ->
+                    // TODO: Handle 404 scenario
+                    todos.[index] <- todo
+                    return! loop todos
                 | Clear -> 
-                    return! loop []
+                    return! loop [||]
             }
-        loop [])
+        loop [||])
 
 open System.IO
 open System.Threading.Tasks
@@ -70,6 +75,11 @@ let deserialize<'T> (stream: Stream) =
     let body = reader.ReadToEnd()
     JsonConvert.DeserializeObject<'T>(body, serializerSettings)
 
+
+(**
+ * Handlers
+ *)
+
 let notFound (env: OwinEnv) =
     env.[Constants.responseStatusCode] <- 404
     env.[Constants.responseReasonPhrase] <- "Not Found"
@@ -83,6 +93,12 @@ let methodNotAllowed (env: OwinEnv) =
 let getTodos (env: OwinEnv) = async {
     let! todos = todoStorage.PostAndAsyncReply(fun ch -> GetAll ch)
     let result = serialize todos 
+    let stream : Stream = unbox env.[Constants.responseBody]
+    do! stream.AsyncWrite(result, 0, result.Length) }
+
+let getTodo index (env: OwinEnv) = async {
+    let! todo = todoStorage.PostAndAsyncReply(fun ch -> Get(index, ch))
+    let result = serialize todo
     let stream : Stream = unbox env.[Constants.responseBody]
     do! stream.AsyncWrite(result, 0, result.Length) }
 
@@ -100,7 +116,7 @@ let postTodo (env: OwinEnv) =
     // Persist the new todo
     let uri = Uri(sprintf "%s/%i" (unbox env.[Constants.requestPathBase]) result.Order, UriKind.Relative)
     let todo =
-        { Uri = uri
+        { Url = uri
           Title = result.Title
           Completed = result.Completed
           Order = result.Order }
@@ -121,14 +137,42 @@ let deleteTodos (env: OwinEnv) =
     env.[Constants.responseReasonPhrase] <- "No Content"
     Task.FromResult<obj>(null) :> Task
 
+
+(**
+ * Routing
+ *)
+
+let matchUri template env =
+    let environ = Environment.toEnvironment env
+    let uriTemplate = UriTemplate(template)
+    let baseUri = environ.GetBaseUri().Value
+    let requestUri = environ.GetRequestUri().Value
+    let path = environ.RequestPath
+    let result = uriTemplate.Match(Uri(baseUri), Uri(requestUri))
+    if result <> null then Some result else None
+
+let (|Root|Item|NotFound|) env =
+    match matchUri "/" env with
+    | Some _ -> Root
+    | None ->
+        match matchUri "/{id}" env with
+        | Some result ->
+            let index = int result.BoundVariables.["id"]
+            Item index
+        | None -> NotFound
+
 let app (env: OwinEnv) =
-    let path = unbox env.[Constants.requestPath]
-    match path with
-    | "/" ->
+    match env with
+    | Root ->
         let httpMethod = unbox env.[Constants.requestMethod]
         match httpMethod with
         | "GET" -> getTodos env |> Async.StartAsTask :> Task
         | "POST" -> postTodo env
         | "DELETE" -> deleteTodos env
         | _ -> methodNotAllowed env
-    | _ -> notFound env
+    | Item index ->
+        let httpMethod = unbox env.[Constants.requestMethod]
+        match httpMethod with
+        | "GET" -> getTodo index env |> Async.StartAsTask :> Task
+        | _ -> methodNotAllowed env
+    | NotFound -> notFound env

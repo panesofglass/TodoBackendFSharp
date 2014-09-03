@@ -26,7 +26,7 @@ type Startup() =
 
     // Store some todos for the initial request
     let initialTodo =
-        { Uri = Uri("/1", UriKind.Relative)
+        { Url = Uri("/1", UriKind.Relative)
           Title = "Create todo items"
           Completed = false
           Order = 1 }
