@@ -43,12 +43,16 @@ the `OwinRailway` module.
 
 ## What's Next?
 
-- [ ] Create todo-backend using [ASP.NET Web API](http://asp.net/web-api)
-- [ ] Create todo-backend using [Dyfrig's `OwinRailway`](https://github.com/fsprojects/dyfrig/blob/master/src/Dyfrig/OwinRailway.fsi)
-- [ ] Create todo-backend using [Dyfrig's System.Net.Http adapter](https://github.com/fsprojects/dyfrig/blob/master/src/Dyfrig/SystemNetHttpAdapter.fsi)
-- [ ] Create todo-backend using [Dyfrig's `OwinMonad`](https://github.com/fsprojects/dyfrig/blob/master/src/Dyfrig/OwinApp.fsi#L35)
-- [ ] Create todo-backend using [Frost](https://github.com/xyncro/frost)
-- [ ] Create todo-backend using [Taliesin for routing](https://github.com/frank-fs/taliesin)
-- [ ] Create todo-backend using [Frank](http://frankfs.net/)
-- [ ] Create todo-backend using [HyperF](https://github.com/eulerfx/HyperF)
-- [ ] Create todo-backend using [Suave](http://suave.io/)
+Next up, I'd like to provide implementations using the following tools:
+
+- [ ] [ASP.NET Web API](http://asp.net/web-api)
+- [ ] [Dyfrig's `OwinRailway`](https://github.com/fsprojects/dyfrig/blob/master/src/Dyfrig/OwinRailway.fsi)
+- [ ] [Dyfrig's System.Net.Http adapter](https://github.com/fsprojects/dyfrig/blob/master/src/Dyfrig/SystemNetHttpAdapter.fsi)
+- [ ] [Dyfrig's `OwinMonad`](https://github.com/fsprojects/dyfrig/blob/master/src/Dyfrig/OwinApp.fsi#L35)
+- [ ] [Frost](https://github.com/xyncro/frost)
+- [ ] [Taliesin for routing](https://github.com/frank-fs/taliesin)
+- [ ] [Frank](http://frankfs.net/)
+- [ ] [HyperF](https://github.com/eulerfx/HyperF)
+- [ ] [Suave](http://suave.io/)
+
+I think it would also be interesting to set up an Azure Worker Role running an F# server, such as [Fracture I/O](https://github.com/fracture-io/fracture) or even a [simple F# wrapper over `HttpListener`](http://msdn.microsoft.com/en-us/library/vstudio/hh297120(v=vs.100).aspx).
