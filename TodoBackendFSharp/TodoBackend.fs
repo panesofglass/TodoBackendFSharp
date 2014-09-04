@@ -25,36 +25,71 @@ type NewTodo =
     { Title : string
       Completed : bool
       Order : int }
+    with
+    static member Empty = { Title = "EMPTY"; Completed = false; Order = -1 }
+
+type TodoPatch =
+    { Title : string option
+      Completed : bool option
+      Order : int option }
 
 type TodoOperation = 
     | GetAll of channel: AsyncReplyChannel<NewTodo[]>
-    | Get of index: int * channel: AsyncReplyChannel<NewTodo option>
-    | Post of todo: NewTodo
-    | Update of index: int * todo: NewTodo
+    | Post of todo: NewTodo * channel: AsyncReplyChannel<int>
     | Clear
+    | Get of index: int * channel: AsyncReplyChannel<NewTodo option>
+    | Update of index: int * patch: TodoPatch * channel: AsyncReplyChannel<NewTodo option>
+    | Remove of index: int * channel: AsyncReplyChannel<unit option>
 
 let todoStorage = 
+    let getTodo index (todos: NewTodo[]) =
+        if todos.Length > index then
+            let todo = todos.[index]
+            if todo = NewTodo.Empty then
+                None
+            else Some todo
+        else None
+
     Agent<_>.Start(fun inbox -> 
         let rec loop todos = 
             async { 
                 let! msg = inbox.Receive()
                 match msg with
                 | GetAll ch -> 
-                    ch.Reply todos
+                    ch.Reply (todos |> Array.filter (fun x -> x <> NewTodo.Empty))
                     return! loop todos
-                | Get(order, ch) ->
-                    // TODO: Handle 404 scenario
-                    let todo = todos |> Array.tryFind (fun x -> x.Order = order)
-                    ch.Reply todo
-                    return! loop todos
-                | Post todo -> 
+                | Post(todo, ch) -> 
+                    ch.Reply todos.Length
                     return! loop (Array.append todos [|todo|])
-                | Update(index, todo) ->
-                    // TODO: Handle 404 scenario
-                    todos.[index] <- todo
-                    return! loop todos
                 | Clear -> 
                     return! loop [||]
+                | Get(index, ch) ->
+                    let todo = getTodo index todos
+                    ch.Reply todo
+                    return! loop todos
+                | Update(index, todo, ch) ->
+                    let todo =
+                        match getTodo index todos with
+                        | Some temp ->
+                            let update =
+                                { temp with
+                                    Title = defaultArg todo.Title temp.Title
+                                    Completed = defaultArg todo.Completed temp.Completed
+                                    Order = defaultArg todo.Order temp.Order }
+                            todos.[index] <- update
+                            Some update
+                        | None -> None
+                    ch.Reply todo
+                    return! loop todos
+                | Remove(index, ch) ->
+                    let result = 
+                        match getTodo index todos with
+                        | Some _ ->
+                            todos.[index] <- NewTodo.Empty
+                            Some ()
+                        | None -> None
+                    ch.Reply result
+                    return! loop todos
             }
         loop [||])
 
@@ -95,14 +130,18 @@ type Todo =
       Completed : bool
       Order : int }
     
+(**
+ * Root resource handlers
+ *)
+
 let getTodos (env: OwinEnv) = async {
     let environ = Environment.toEnvironment env
     let baseUri = Uri(environ.GetBaseUri().Value)
     let! todos = todoStorage.PostAndAsyncReply(fun ch -> GetAll ch)
     let todos' =
         todos
-        |> Array.map (fun x ->
-            { Url = Uri(baseUri, sprintf "/%i" x.Order)
+        |> Array.mapi (fun i x ->
+            { Url = Uri(baseUri, sprintf "/%i" i)
               Title = x.Title
               Completed = x.Completed
               Order = x.Order })
@@ -110,37 +149,20 @@ let getTodos (env: OwinEnv) = async {
     let stream : Stream = unbox env.[Constants.responseBody]
     do! stream.AsyncWrite(result, 0, result.Length) }
 
-let getTodo index (env: OwinEnv) = async {
-    let environ = Environment.toEnvironment env
-    let baseUri = Uri(environ.GetBaseUri().Value)
-    let! todo = todoStorage.PostAndAsyncReply(fun ch -> Get(index, ch))
-    match todo with
-    | None ->
-        do! notFound env
-    | Some todo ->
-        let todo' = 
-            { Url = Uri(baseUri, sprintf "/%i" todo.Order)
-              Title = todo.Title
-              Completed = todo.Completed
-              Order = todo.Order }
-        let result = serialize todo'
-        let stream : Stream = unbox env.[Constants.responseBody]
-        do! stream.AsyncWrite(result, 0, result.Length) }
-
-let postTodo (env: OwinEnv) =
+let postTodo (env: OwinEnv) = async {
     // Retrieve the request body
     let stream : Stream = unbox env.[Constants.requestBody]
     let newTodo : NewTodo = deserialize stream
     // TODO: Handle invalid result
 
     // Persist the new todo
-    todoStorage.Post(Post newTodo)
+    let! index = todoStorage.PostAndAsyncReply(fun ch -> Post(newTodo, ch))
 
     // Return the new todo item
     let environ = Environment.toEnvironment env
     let baseUri = Uri(environ.GetBaseUri().Value)
     let todo =
-        { Url = Uri(baseUri, sprintf "/%i" newTodo.Order)
+        { Url = Uri(baseUri, sprintf "/%i" index)
           Title = newTodo.Title
           Completed = newTodo.Completed
           Order = newTodo.Order }
@@ -150,7 +172,7 @@ let postTodo (env: OwinEnv) =
     headers.Add("Location", [| todo.Url.AbsoluteUri |])
     let result = serialize todo
     let stream : Stream = unbox env.[Constants.responseBody]
-    stream.AsyncWrite(result, 0, result.Length)
+    do! stream.AsyncWrite(result, 0, result.Length) }
 
 let deleteTodos (env: OwinEnv) =
     todoStorage.Post Clear
@@ -158,6 +180,49 @@ let deleteTodos (env: OwinEnv) =
     env.[Constants.responseReasonPhrase] <- "No Content"
     async.Return()
 
+
+(**
+ * Item resource handlers
+ *)
+
+let getTodo index (env: OwinEnv) = async {
+    let environ = Environment.toEnvironment env
+    let baseUri = Uri(environ.GetBaseUri().Value)
+    let! todo = todoStorage.PostAndAsyncReply(fun ch -> Get(index, ch))
+    match todo with
+    | Some todo ->
+        let todo' = 
+            { Url = Uri(baseUri, sprintf "/%i" todo.Order)
+              Title = todo.Title
+              Completed = todo.Completed
+              Order = todo.Order }
+        let result = serialize todo'
+        let stream : Stream = unbox env.[Constants.responseBody]
+        do! stream.AsyncWrite(result, 0, result.Length)
+    | None -> do! notFound env }
+
+let patchTodo index (env: OwinEnv) = async {
+    // Retrieve the request body
+    let stream : Stream = unbox env.[Constants.requestBody]
+    let patch : TodoPatch = deserialize stream
+    // TODO: Handle invalid result
+
+    // Try to patch the todo
+    let! newTodo = todoStorage.PostAndAsyncReply(fun ch -> Update(index, patch, ch))
+
+    match newTodo with
+    | Some _ ->
+        env.[Constants.responseStatusCode] <- 204
+        env.[Constants.responseReasonPhrase] <- "No Content"
+    | None -> do! notFound env }
+
+let deleteTodo index (env: OwinEnv) = async {
+    let! result = todoStorage.PostAndAsyncReply(fun ch -> Remove(index, ch))
+    match result with
+    | Some _ ->
+        env.[Constants.responseStatusCode] <- 204
+        env.[Constants.responseReasonPhrase] <- "No Content"
+    | None -> do! notFound env }
 
 (**
  * Routing
@@ -177,6 +242,8 @@ let (|Item|_|) env =
         let index = int result.BoundVariables.["id"]
         match unbox env.[Constants.requestMethod] with
         | "GET" -> getTodo index env
+        | "PATCH" -> patchTodo index env
+        | "DELETE" -> deleteTodo index env
         | _ -> methodNotAllowed env
         |> Some
     | None -> None
