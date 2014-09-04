@@ -21,15 +21,27 @@ open Owin
 open Microsoft.Owin
 open TodoBackend
 
-type Startup() =
-
-    let cors next env =
+module Cors =
+    /// Cross Origin Resource Sharing (CORS) middleware wrapper for the `Microsoft.Owin.Cors` `CorsMiddleware`.
+    let middleware next env =
         Cors.CorsMiddleware(Dyfrig.OwinAppFunc next, Cors.CorsOptions.AllowAll).Invoke env
 
+module Link =
+    open Dyfrig
+
+    /// Middleware that inserts an HTTP `Link` header pointing to the TodoBackendFSharp source code repository on GitHub.
+    let middleware next (env: OwinEnv) =
+        let headers : OwinHeaders = unbox env.[Constants.responseHeaders]
+        headers.Add("Link", [|"<https://github.com/panesofglass/TodoBackendFSharp>; rel=meta"|])
+        next env
+
+[<Sealed>]
+type Startup() =
     member __.Configuration(builder: IAppBuilder) =
         builder.Use(fun _ ->
             app
-            |> cors)
+            |> Link.middleware
+            |> Cors.middleware)
         |> ignore
 
 [<assembly: OwinStartupAttribute(typeof<Startup>)>]
