@@ -19,7 +19,6 @@ namespace TodoBackendFSharp
 
 open Owin
 open Microsoft.Owin
-open TodoBackend
 
 module Cors =
     /// Cross Origin Resource Sharing (CORS) middleware wrapper for the `Microsoft.Owin.Cors` `CorsMiddleware`.
@@ -39,7 +38,7 @@ module Link =
 type Startup() =
     member __.Configuration(builder: IAppBuilder) =
         builder.Use(fun _ ->
-            app
+            TodoBackend.app
             |> Link.middleware
             |> Cors.middleware)
         |> ignore

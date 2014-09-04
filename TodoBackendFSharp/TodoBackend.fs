@@ -99,6 +99,7 @@ open Dyfrig
 open Newtonsoft.Json
 
 let serializerSettings = JsonSerializerSettings(ContractResolver = Serialization.CamelCasePropertyNamesContractResolver())
+serializerSettings.Converters.Add(OptionConverter())
 
 let serialize data =
     JsonConvert.SerializeObject(data, serializerSettings)
@@ -211,9 +212,20 @@ let patchTodo index (env: OwinEnv) = async {
     let! newTodo = todoStorage.PostAndAsyncReply(fun ch -> Update(index, patch, ch))
 
     match newTodo with
-    | Some _ ->
-        env.[Constants.responseStatusCode] <- 204
-        env.[Constants.responseReasonPhrase] <- "No Content"
+    | Some newTodo ->
+        // Return the new todo item
+        let environ = Environment.toEnvironment env
+        let baseUri = Uri(environ.GetBaseUri().Value)
+        let todo =
+            { Url = Uri(baseUri, sprintf "/%i" index)
+              Title = newTodo.Title
+              Completed = newTodo.Completed
+              Order = newTodo.Order }
+        env.[Constants.responseStatusCode] <- 200
+        env.[Constants.responseReasonPhrase] <- "OK"
+        let result = serialize todo
+        let stream : Stream = unbox env.[Constants.responseBody]
+        do! stream.AsyncWrite(result, 0, result.Length)
     | None -> do! notFound env }
 
 let deleteTodo index (env: OwinEnv) = async {
