@@ -54,5 +54,6 @@ Next up, I'd like to provide implementations using the following tools:
 - [ ] [Frank](http://frankfs.net/)
 - [ ] [HyperF](https://github.com/eulerfx/HyperF)
 - [ ] [Suave](http://suave.io/)
+- [ ] [WebSharper](http://websharper.com/), which has its own [TodoMvc-style client](http://intellifactory.github.io/websharper.ui.next/#samples/samples/TodoList)
 
 I think it would also be interesting to set up an Azure Worker Role running an F# server, such as [Fracture I/O](https://github.com/fracture-io/fracture) or even a [simple F# wrapper over `HttpListener`](http://msdn.microsoft.com/en-us/library/vstudio/hh297120(v=vs.100).aspx).
