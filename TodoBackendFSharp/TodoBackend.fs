@@ -171,29 +171,30 @@ let matchUri template env =
     let result = uriTemplate.Match(Uri(baseUri), Uri(requestUri))
     if result <> null then Some result else None
 
-let (|Root|Item|NotFound|) env =
+let (|Item|_|) env =
     match matchUri "/{id}" env with
     | Some result ->
         let index = int result.BoundVariables.["id"]
-        Item index
-    | None ->
-        match matchUri "/" env with
-        | Some _ -> Root
-        | None -> NotFound
+        match unbox env.[Constants.requestMethod] with
+        | "GET" -> getTodo index env
+        | _ -> methodNotAllowed env
+        |> Some
+    | None -> None
 
-let app (env: OwinEnv) =
-    match env with
-    | Root ->
-        let httpMethod = unbox env.[Constants.requestMethod]
-        match httpMethod with
+let (|Root|_|) env =
+    match matchUri "/" env with
+    | Some _ ->
+        match unbox env.[Constants.requestMethod] with
         | "GET" -> getTodos env
         | "POST" -> postTodo env
         | "DELETE" -> deleteTodos env
         | _ -> methodNotAllowed env
-    | Item index ->
-        let httpMethod = unbox env.[Constants.requestMethod]
-        match httpMethod with
-        | "GET" -> getTodo index env
-        | _ -> methodNotAllowed env
-    | NotFound -> notFound env
+        |> Some
+    | None -> None
+
+let app env =
+    match env with
+    | Item task -> task
+    | Root task -> task
+    | _ -> notFound env
     |> Async.StartAsTask :> Task
