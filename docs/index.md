@@ -40,3 +40,15 @@ In this first version of the application, Dyfrig is used only for its type alias
 In a few places, it's `Environment` wrapper type is used to reconstruct the request URI, though this hardly
 takes advantage of the library. Future versions will leverage more features, including error handling through
 the `OwinRailway` module.
+
+## What's Next?
+
+- [ ] Create todo-backend using [ASP.NET Web API](http://asp.net/web-api)
+- [ ] Create todo-backend using [Dyfrig's `OwinRailway`](https://github.com/fsprojects/dyfrig/blob/master/src/Dyfrig/OwinRailway.fsi)
+- [ ] Create todo-backend using [Dyfrig's System.Net.Http adapter](https://github.com/fsprojects/dyfrig/blob/master/src/Dyfrig/SystemNetHttpAdapter.fsi)
+- [ ] Create todo-backend using [Dyfrig's `OwinMonad`](https://github.com/fsprojects/dyfrig/blob/master/src/Dyfrig/OwinApp.fsi#L35)
+- [ ] Create todo-backend using [Frost](https://github.com/xyncro/frost)
+- [ ] Create todo-backend using [Taliesin for routing](https://github.com/frank-fs/taliesin)
+- [ ] Create todo-backend using [Frank](http://frankfs.net/)
+- [ ] Create todo-backend using [HyperF](https://github.com/eulerfx/HyperF)
+- [ ] Create todo-backend using [Suave](http://suave.io/)
