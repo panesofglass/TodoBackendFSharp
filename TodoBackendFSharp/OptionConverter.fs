@@ -1,11 +1,10 @@
 ﻿/// Original source: http://gorodinski.com/blog/2013/01/05/json-dot-net-type-converters-for-f-option-list-tuple/
 
-namespace TodoBackendFSharp
+namespace TodoBackend
 
 open System
 open Microsoft.FSharp.Reflection
 open Newtonsoft.Json
-open Newtonsoft.Json.Converters
  
 type OptionConverter() =
     inherit JsonConverter()

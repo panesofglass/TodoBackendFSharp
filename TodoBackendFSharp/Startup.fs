@@ -15,7 +15,7 @@
 // limitations under the License.
 //----------------------------------------------------------------------------
 
-namespace TodoBackendFSharp
+namespace TodoBackend
 
 open Owin
 open Microsoft.Owin
