@@ -50,7 +50,7 @@ module Implementations =
         let pathBase : string = unbox env.[Constants.requestPathBase]
         env.[Constants.requestPathBase] <- pathBase + "/" + firstSegment
         // Update the owin.RequestPath environment variable.
-        env.[Constants.requestPath] <- String.Join("/", pathSegments.[1..])
+        env.[Constants.requestPath] <- "/" + String.Join("/", pathSegments.[1..])
         match selector (firstSegment.ToLowerInvariant()) with
         | Some app -> app env
         | None -> TodoBackend.notFound env |> Async.StartAsTask :> Task

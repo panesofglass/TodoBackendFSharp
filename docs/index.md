@@ -12,9 +12,9 @@ to demonstrate the ease with which you can build web applications in F#. Specifi
 in this implementation include:
 
 * [Function composition for composing applications](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackend/Startup.fs#L78-83)
-* [Active Patterns for routing](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackend/Owin.fs#L177-205)
+* [Active Patterns for routing](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackend/Owin.fs#L186-214)
 * [MailboxProcessor for in-memory storage](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackend/TodoStorage.fs)
-* [Simple, Async functions as HTTP handlers](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackend/Owin.fs#L64-163)
+* [Simple, Async functions as HTTP handlers](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackend/Owin.fs#L40-163)
 
 ## Libraries
 

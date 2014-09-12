@@ -56,19 +56,25 @@ type Todo =
       Title : string
       Completed : bool
       Order : int }
-    
+
+let makeItemUri env index =
+    let environ = Environment.toEnvironment env
+    let baseUri = Uri(environ.GetBaseUri().Value)
+    if environ.RequestPathBase = "/" then
+        Uri(baseUri, sprintf "/%i" index)
+    else
+        Uri(baseUri, sprintf "%s/%i" environ.RequestPathBase index)
+
 (**
  * Root resource handlers
  *)
 
 let getTodos (env: OwinEnv) = async {
-    let environ = Environment.toEnvironment env
-    let baseUri = Uri(environ.GetBaseUri().Value)
     let! todos = store.PostAndAsyncReply(fun ch -> GetAll ch)
     let todos' =
         todos
         |> Array.mapi (fun i x ->
-            { Url = Uri(baseUri, sprintf "/%i" i)
+            { Url = makeItemUri env i
               Title = x.Title
               Completed = x.Completed
               Order = x.Order })
@@ -86,10 +92,8 @@ let postTodo (env: OwinEnv) = async {
     let! index = store.PostAndAsyncReply(fun ch -> Post(newTodo, ch))
 
     // Return the new todo item
-    let environ = Environment.toEnvironment env
-    let baseUri = Uri(environ.GetBaseUri().Value)
     let todo =
-        { Url = Uri(baseUri, sprintf "/%i" index)
+        { Url = makeItemUri env index
           Title = newTodo.Title
           Completed = newTodo.Completed
           Order = newTodo.Order }
@@ -113,13 +117,11 @@ let deleteTodos (env: OwinEnv) =
  *)
 
 let getTodo index (env: OwinEnv) = async {
-    let environ = Environment.toEnvironment env
-    let baseUri = Uri(environ.GetBaseUri().Value)
     let! todo = store.PostAndAsyncReply(fun ch -> Get(index, ch))
     match todo with
     | Some todo ->
         let todo' = 
-            { Url = Uri(baseUri, sprintf "/%i" todo.Order)
+            { Url = makeItemUri env index
               Title = todo.Title
               Completed = todo.Completed
               Order = todo.Order }
@@ -140,10 +142,8 @@ let patchTodo index (env: OwinEnv) = async {
     match newTodo with
     | Some newTodo ->
         // Return the new todo item
-        let environ = Environment.toEnvironment env
-        let baseUri = Uri(environ.GetBaseUri().Value)
         let todo =
-            { Url = Uri(baseUri, sprintf "/%i" index)
+            { Url = makeItemUri env index
               Title = newTodo.Title
               Completed = newTodo.Completed
               Order = newTodo.Order }
@@ -168,10 +168,19 @@ let deleteTodo index (env: OwinEnv) = async {
 
 let matchUri template env =
     let environ = Environment.toEnvironment env
-    let uriTemplate = UriTemplate(template)
-    let baseUri = environ.GetBaseUri().Value
-    let requestUri = environ.GetRequestUri().Value
-    let result = uriTemplate.Match(Uri(baseUri), Uri(requestUri))
+    let basePath = environ.RequestPathBase
+    let template' = if String.IsNullOrEmpty basePath then template else basePath + template
+    let uriTemplate = UriTemplate(template', ignoreTrailingSlash = true)
+    let baseUri =
+        // Get the base URI without the owin.RequestPathBase
+        let temp = environ.GetBaseUri().Value
+        if String.IsNullOrEmpty basePath then
+            Uri(temp)
+        else
+        let index = temp.IndexOf(environ.RequestPathBase)
+        Uri(temp.Substring(0, index))
+    let requestUri = Uri(environ.GetRequestUri().Value)
+    let result = uriTemplate.Match(baseUri, requestUri)
     if result <> null then Some result else None
 
 let (|Item|_|) env =
