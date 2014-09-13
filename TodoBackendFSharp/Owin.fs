@@ -15,7 +15,7 @@
 // limitations under the License.
 //----------------------------------------------------------------------------
 
-module TodoBackend.TodoBackend
+module TodoBackend.Owin
 
 open System
 open System.IO
@@ -50,12 +50,6 @@ let methodNotAllowed (env: OwinEnv) =
     env.[Constants.responseStatusCode] <- 405
     env.[Constants.responseReasonPhrase] <- "Method Not Allowed"
     async.Return()
-
-type Todo = 
-    { Url : Uri
-      Title : string
-      Completed : bool
-      Order : int }
 
 let makeItemUri env index =
     let environ = Environment.toEnvironment env

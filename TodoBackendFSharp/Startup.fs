@@ -43,7 +43,7 @@ module Implementations =
         let pathSegments = path.Split([|'/'|], StringSplitOptions.RemoveEmptyEntries)
         // Take the first segment for the purpose of matching sub-paths
         if pathSegments.Length = 0 then
-            TodoBackend.notFound env |> Async.StartAsTask :> Task
+            Owin.notFound env |> Async.StartAsTask :> Task
         else
         let firstSegment = pathSegments.[0]
         // Set the segment in the owin.RequestPathBase environment variable.
@@ -53,7 +53,7 @@ module Implementations =
         env.[Constants.requestPath] <- "/" + String.Join("/", pathSegments.[1..])
         match selector (firstSegment.ToLowerInvariant()) with
         | Some app -> app env
-        | None -> TodoBackend.notFound env |> Async.StartAsTask :> Task
+        | None -> Owin.notFound env |> Async.StartAsTask :> Task
 
 (*
 Microsoft's Katana components make use of a `Startup` class with a single member conventionally named
@@ -77,7 +77,8 @@ type Startup() =
         // Wire up middleware
         builder.Use(fun _ ->
             Implementations.choose (function
-            | "owin" -> Some TodoBackend.app 
+            | "owin" -> Some Owin.app 
+            | "webapi" -> Some WebApi.app
             | _ -> None)
             |> Link.middleware
             |> Cors.middleware)

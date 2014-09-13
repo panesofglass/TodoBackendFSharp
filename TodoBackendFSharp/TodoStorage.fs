@@ -21,6 +21,13 @@ open System
 
 type Agent<'T> = MailboxProcessor<'T>
 
+/// Todo Model
+type Todo = 
+    { Url : Uri
+      Title : string
+      Completed : bool
+      Order : int }
+
 type NewTodo =
     { Title : string
       Completed : bool
