@@ -11,10 +11,10 @@ The first implementation was written as directly upon the [OWIN](http://owin.org
 to demonstrate the ease with which you can build web applications in F#. Specific features of F# demonstrated
 in this implementation include:
 
-* [Function composition for composing applications](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackend/Startup.fs#L78-83)
-* [Active Patterns for routing](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackend/Owin.fs#L186-214)
-* [MailboxProcessor for in-memory storage](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackend/TodoStorage.fs)
-* [Simple, Async functions as HTTP handlers](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackend/Owin.fs#L40-163)
+* [Function composition for composing applications](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackendFSharp/Startup.fs#L78-83)
+* [Active Patterns for routing](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackendFSharp/Owin.fs#L186-214)
+* [MailboxProcessor for in-memory storage](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackendFSharp/TodoStorage.fs)
+* [Simple, Async functions as HTTP handlers](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackendFSharp/Owin.fs#L40-163)
 
 ## Libraries
 
@@ -24,8 +24,8 @@ These libraries are [Katana](https://katanaproject.codeplex.com/) and [Dyfrig](h
 ### Katana
 
 Microsoft's Katana components provide a number of hosts and many, reusable middlewares to ease the burden of
-building web applications. Katana hosts make use of a [`Startup` class](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackend/Startup.fs#L71)
-with a single member conventionally named [`Configuration`](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackend/Startup.fs#L76).
+building web applications. Katana hosts make use of a [`Startup` class](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackendFSharp/Startup.fs#L71)
+with a single member conventionally named [`Configuration`](https://github.com/panesofglass/TodoBackendFSharp/blob/master/TodoBackendFSharp/Startup.fs#L76).
 `Configuration` takes an `IAppBuilder` into which you mount middleware components.
 In F#, you can write middleware components as simple functions taking the next `OwinAppFunc` handler
 and an `OwinEnv` environment dictionary. F# allows you to chain these together naturally using the
