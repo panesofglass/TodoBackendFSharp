@@ -95,6 +95,41 @@ type TodoController() =
             | None -> return this.Request.CreateResponse(HttpStatusCode.NotFound) }
         |> Async.StartAsTask
 
+    member this.PatchTodo(id) =
+        async {
+            let! content = this.Request.Content.ReadAsStringAsync() |> Async.AwaitTask
+            // Retrieve the configuration in order to retrieve the configured JSON formatter.
+            // Why deserialize manually? Web API responds to the POST with the following:
+            //     {"message":"The request contains an entity body but no Content-Type header. The inferred media type 'application/octet-stream' is not supported for this resource."}
+            // Therefore, we have to tell Web API how we want to deserialize the content.
+            let config = this.Request.GetConfiguration()
+            let settings = config.Formatters.JsonFormatter.SerializerSettings
+            let patch = JsonConvert.DeserializeObject<TodoPatch>(content, settings)
+            // TODO: Handle invalid result
+
+            // Try to patch the todo
+            let! newTodo = store.PostAndAsyncReply(fun ch -> Update(id, patch, ch))
+
+            match newTodo with
+            | Some newTodo ->
+                // Return the new todo item
+                let todo =
+                    { Url = this.Request.RequestUri
+                      Title = newTodo.Title
+                      Completed = newTodo.Completed
+                      Order = newTodo.Order }
+                return this.Request.CreateResponse(todo)
+            | None -> return this.Request.CreateResponse(HttpStatusCode.NotFound) }
+        |> Async.StartAsTask
+
+    member this.DeleteTodo(id) =
+        async {
+            let! result = store.PostAndAsyncReply(fun ch -> Remove(id, ch))
+            match result with
+            | Some _ -> return this.Request.CreateResponse(HttpStatusCode.NoContent)
+            | None   -> return this.Request.CreateResponse(HttpStatusCode.NotFound) }
+        |> Async.StartAsTask
+
 type internal AsyncCallableHandler (handler) =
     inherit DelegatingHandler(handler)
     member internal x.CallSendAsync(request, cancellationToken) =
