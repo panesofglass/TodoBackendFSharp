@@ -36,7 +36,7 @@ type TodosController() =
             let todos' =
                 todos
                 |> Array.mapi (fun i x ->
-                    { Url = Uri(this.Url.Link("GetTodo", dict ["id", i]))
+                    { Url = Uri(this.Request.RequestUri.AbsoluteUri + i.ToString()) // TODO: Uri(this.Url.Link("GetTodo", dict ["id", i]))
                       Title = x.Title
                       Completed = x.Completed
                       Order = x.Order })
@@ -60,7 +60,7 @@ type TodosController() =
             // Return the new todo item
             // TODO: Debug `this.Url.Link`.
             //let newUrl = Uri(this.Url.Link("GetTodo", dict ["id", index]))
-            let newUrl = Uri(this.Request.RequestUri.AbsoluteUri + "/" + index.ToString())
+            let newUrl = Uri(this.Request.RequestUri.AbsoluteUri + index.ToString())
             let todo =
                 { Url = newUrl
                   Title = newTodo.Title
@@ -70,6 +70,10 @@ type TodosController() =
             response.Headers.Location <- newUrl
             return response }
         |> Async.StartAsTask
+
+    member this.DeleteTodos() =
+        store.Post Clear
+        this.Request.CreateResponse(HttpStatusCode.NoContent)
 
 [<RoutePrefix("webapi")>]
 [<Route("{id}")>]
@@ -83,7 +87,7 @@ type TodoController() =
             match todo with
             | Some todo ->
                 let todo' = 
-                    { Url = Uri(this.Url.Link("GetTodo", dict ["id", id]))
+                    { Url = this.Request.RequestUri
                       Title = todo.Title
                       Completed = todo.Completed
                       Order = todo.Order }
