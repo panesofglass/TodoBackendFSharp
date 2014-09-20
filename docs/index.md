@@ -41,12 +41,27 @@ In a few places, it's `Environment` wrapper type is used to reconstruct the requ
 takes advantage of the library. Future versions will leverage more features, including error handling through
 the `OwinRailway` module.
 
+### ASP.NET Web API
+
+Web API allows you to build lazily constructed `ApiController`s and either `System.Web.Routing` or Attribute Routing. In this sample, I chose
+to use Attribute Routing, since that is what I typically use in my production applications. I've also tried to stick to typical Web API
+patterns as you might see them in official samples. I broke from this approach in the `PostTodo` and `PatchTodo` handlers
+as I received errors in Web API resulting from the spec requests not submitting a `Content-Type` header. As a result, I'm "manually"
+deserializing the submitted request content. Typically, you should be able to specify the type in the handler parameters.
+
+In the current, early version of the [ASP.NET Web API](http://asp.net/web-api) implementation,
+I created my own handler with which to mount Web API. This is similar in concept to the more robust [Microsoft.AspNet.WebApi.Owin](https://www.nuget.org/packages/Microsoft.AspNet.WebApi.Owin)
+package without mapping error handling. I found a few other bugs in my implementation, as well, such as the `UrlHelper` not working properly.
+I need to complete this implementation. I did not use the official Katana package as 1) it does not adhere to the OWIN spec correctly,
+and 2) thought it worthwhile to show how little code was necessary to host Web API. As to the latter point, you can use the code in `WebApi.app`
+to host an in-memory Web API server useful for testing without involving a real server.
+
 ## What's Next?
 
 Next up, I'd like to provide implementations using the following tools:
 
-- [x] [OWIN](http://owin.org/)
-- [ ] [ASP.NET Web API](http://asp.net/web-api)
+- [x] [OWIN](http://owin.org/) [specs](http://todo-backend.thepete.net/specs/index.html?http://todo-backend-fsharp.azurewebsites.net/owin) [client](http://todo-backend.thepete.net/client/index.html?http://todo-backend-fsharp.azurewebsites.net/owin)
+- [x] [ASP.NET Web API](http://asp.net/web-api) [specs](http://todo-backend.thepete.net/specs/index.html?http://todo-backend-fsharp.azurewebsites.net/webapi) [client](http://todo-backend.thepete.net/client/index.html?http://todo-backend-fsharp.azurewebsites.net/webapi)
 - [ ] [Dyfrig's `OwinRailway`](https://github.com/fsprojects/dyfrig/blob/master/src/Dyfrig/OwinRailway.fsi)
 - [ ] [Dyfrig's System.Net.Http adapter](https://github.com/fsprojects/dyfrig/blob/master/src/Dyfrig/SystemNetHttpAdapter.fsi)
 - [ ] [Dyfrig's `OwinMonad`](https://github.com/fsprojects/dyfrig/blob/master/src/Dyfrig/OwinApp.fsi#L35)
