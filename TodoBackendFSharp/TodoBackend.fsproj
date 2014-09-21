@@ -121,6 +121,7 @@
     <Compile Include="TodoStorage.fs" />
     <Compile Include="Owin.fs" />
     <Compile Include="WebApi.fs" />
+    <Compile Include="Frank.fs" />
     <Compile Include="Startup.fs" />
     <Content Include="Web.config" />
     <Content Include="packages.config" />
@@ -128,6 +129,14 @@
   <ItemGroup>
     <Reference Include="Dyfrig">
       <HintPath>..\packages\Dyfrig.0.7.0.44\lib\net40\Dyfrig.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Frank">
+      <HintPath>..\packages\Frank.3.0.0.9\lib\net45\Frank.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FSharpx.Core">
+      <HintPath>..\packages\FSharpx.Core.1.8.41\lib\40\FSharpx.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FsPickler">

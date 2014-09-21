@@ -77,8 +77,9 @@ type Startup() =
         // Wire up middleware
         builder.Use(fun _ ->
             Implementations.choose (function
-            | "owin" -> Some Owin.app 
+            | "owin"   -> Some Owin.app
             | "webapi" -> Some WebApi.app
+            | "frank"  -> Some(Frank.app "frank")
             | _ -> None)
             |> Link.middleware
             |> Cors.middleware)

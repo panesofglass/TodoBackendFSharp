@@ -60,14 +60,14 @@ to host an in-memory Web API server useful for testing without involving a real 
 
 Next up, I'd like to provide implementations using the following tools:
 
-- [x] [OWIN](http://owin.org/) [specs](http://todo-backend.thepete.net/specs/index.html?http://todo-backend-fsharp.azurewebsites.net/owin) [client](http://todo-backend.thepete.net/client/index.html?http://todo-backend-fsharp.azurewebsites.net/owin)
-- [x] [ASP.NET Web API](http://asp.net/web-api) [specs](http://todo-backend.thepete.net/specs/index.html?http://todo-backend-fsharp.azurewebsites.net/webapi) [client](http://todo-backend.thepete.net/client/index.html?http://todo-backend-fsharp.azurewebsites.net/webapi)
+- [x] [OWIN](http://owin.org/) ([specs](http://todo-backend.thepete.net/specs/index.html?http://todo-backend-fsharp.azurewebsites.net/owin) [client](http://todo-backend.thepete.net/client/index.html?http://todo-backend-fsharp.azurewebsites.net/owin))
+- [x] [ASP.NET Web API](http://asp.net/web-api) ([specs](http://todo-backend.thepete.net/specs/index.html?http://todo-backend-fsharp.azurewebsites.net/webapi) [client](http://todo-backend.thepete.net/client/index.html?http://todo-backend-fsharp.azurewebsites.net/webapi))
 - [ ] [Dyfrig's `OwinRailway`](https://github.com/fsprojects/dyfrig/blob/master/src/Dyfrig/OwinRailway.fsi)
 - [ ] [Dyfrig's System.Net.Http adapter](https://github.com/fsprojects/dyfrig/blob/master/src/Dyfrig/SystemNetHttpAdapter.fsi)
 - [ ] [Dyfrig's `OwinMonad`](https://github.com/fsprojects/dyfrig/blob/master/src/Dyfrig/OwinApp.fsi#L35)
 - [ ] [Frost](https://github.com/xyncro/frost)
 - [ ] [Taliesin for routing](https://github.com/frank-fs/taliesin)
-- [ ] [Frank](http://frankfs.net/)
+- [x] [Frank](http://frankfs.net/) ([specs](http://todo-backend.thepete.net/specs/index.html?http://todo-backend-fsharp.azurewebsites.net/frank) [client](http://todo-backend.thepete.net/client/index.html?http://todo-backend-fsharp.azurewebsites.net/frank))
 - [ ] [HyperF](https://github.com/eulerfx/HyperF)
 - [ ] [Suave](http://suave.io/)
 - [ ] [WebSharper](http://websharper.com/), which has its own [TodoMvc-style client](http://intellifactory.github.io/websharper.ui.next/#samples/samples/TodoList)
