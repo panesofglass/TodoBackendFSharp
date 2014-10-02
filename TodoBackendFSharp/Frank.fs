@@ -24,10 +24,11 @@ open System.Threading.Tasks
 open System.Web.Http
 open System.Web.Http.HttpResource
 open Newtonsoft.Json
-open TodoBackend.TodoStorage
+open TodoStorage
+open TodoStorage.InMemory
 
 let getTodos (request: HttpRequestMessage) = async {
-    let! todos = store.PostAndAsyncReply(fun ch -> GetAll ch)
+    let! todos = store.GetAll()
     let todos' =
         todos
         |> Array.mapi (fun i x ->
@@ -44,7 +45,7 @@ let postTodo (request: HttpRequestMessage) = async {
     let newTodo = JsonConvert.DeserializeObject<NewTodo>(content, settings)
 
     // Persist the new todo
-    let! index = store.PostAndAsyncReply(fun ch -> Post(newTodo, ch))
+    let! index = store.Post newTodo
 
     // Return the new todo item
     // TODO: Debug `this.Url.Link`.
@@ -60,7 +61,7 @@ let postTodo (request: HttpRequestMessage) = async {
     return response }
 
 let deleteTodos (request: HttpRequestMessage) =
-    store.Post Clear
+    store.Clear()
     request.CreateResponse(HttpStatusCode.NoContent)
     |> async.Return
 
@@ -68,7 +69,7 @@ let getTodo (request: HttpRequestMessage) = async {
     match getParam request "id" with
     | Some id ->
         let id = Int32.Parse id
-        let! todo = store.PostAndAsyncReply(fun ch -> Get(id, ch))
+        let! todo = store.Get id
         match todo with
         | Some todo ->
             let todo' = 
@@ -91,7 +92,7 @@ let patchTodo (request: HttpRequestMessage) = async {
         // TODO: Handle invalid result
 
         // Try to patch the todo
-        let! newTodo = store.PostAndAsyncReply(fun ch -> Update(id, patch, ch))
+        let! newTodo = store.Update(id, patch)
 
         match newTodo with
         | Some newTodo ->
@@ -109,7 +110,7 @@ let deleteTodo (request: HttpRequestMessage) = async {
     match getParam request "id" with
     | Some id ->
         let id = Int32.Parse id
-        let! result = store.PostAndAsyncReply(fun ch -> Remove(id, ch))
+        let! result = store.Remove id
         let statusCode =
             match result with
             | Some _ -> HttpStatusCode.NoContent

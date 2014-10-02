@@ -23,6 +23,7 @@ open System.Threading.Tasks
 open Dyfrig
 open Newtonsoft.Json
 open TodoStorage
+open TodoStorage.InMemory
 
 let serializerSettings = JsonSerializerSettings(ContractResolver = Serialization.CamelCasePropertyNamesContractResolver())
 serializerSettings.Converters.Add(OptionConverter())
@@ -64,7 +65,7 @@ let makeItemUri env index =
  *)
 
 let getTodos (env: OwinEnv) = async {
-    let! todos = store.PostAndAsyncReply(fun ch -> GetAll ch)
+    let! todos = store.GetAll()
     let todos' =
         todos
         |> Array.mapi (fun i x ->
@@ -83,7 +84,7 @@ let postTodo (env: OwinEnv) = async {
     // TODO: Handle invalid result
 
     // Persist the new todo
-    let! index = store.PostAndAsyncReply(fun ch -> Post(newTodo, ch))
+    let! index = store.Post newTodo
 
     // Return the new todo item
     let todo =
@@ -100,7 +101,7 @@ let postTodo (env: OwinEnv) = async {
     do! stream.AsyncWrite(result, 0, result.Length) }
 
 let deleteTodos (env: OwinEnv) =
-    store.Post Clear
+    store.Clear()
     env.[Constants.responseStatusCode] <- 204
     env.[Constants.responseReasonPhrase] <- "No Content"
     async.Return()
@@ -111,7 +112,7 @@ let deleteTodos (env: OwinEnv) =
  *)
 
 let getTodo index (env: OwinEnv) = async {
-    let! todo = store.PostAndAsyncReply(fun ch -> Get(index, ch))
+    let! todo = store.Get index
     match todo with
     | Some todo ->
         let todo' = 
@@ -131,7 +132,7 @@ let patchTodo index (env: OwinEnv) = async {
     // TODO: Handle invalid result
 
     // Try to patch the todo
-    let! newTodo = store.PostAndAsyncReply(fun ch -> Update(index, patch, ch))
+    let! newTodo = store.Update(index, patch)
 
     match newTodo with
     | Some newTodo ->
@@ -149,7 +150,7 @@ let patchTodo index (env: OwinEnv) = async {
     | None -> do! notFound env }
 
 let deleteTodo index (env: OwinEnv) = async {
-    let! result = store.PostAndAsyncReply(fun ch -> Remove(index, ch))
+    let! result = store.Remove index
     match result with
     | Some _ ->
         env.[Constants.responseStatusCode] <- 204

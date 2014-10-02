@@ -18,7 +18,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{91A5A85E-B13D-4BFE-A46D-ED1B00BCEE2F}"
 	ProjectSection(SolutionItems) = preProject
 		docs\index.md = docs\index.md
+		docs\Script.fsx = docs\Script.fsx
+		docs\slides.fsx = docs\slides.fsx
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "files", "files", "{0AA6DF24-8945-470D-AA28-08128FBAD8A9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{9BFC2CA9-A915-403E-8349-2A28DC426A13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,5 +39,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0AA6DF24-8945-470D-AA28-08128FBAD8A9} = {91A5A85E-B13D-4BFE-A46D-ED1B00BCEE2F}
+		{9BFC2CA9-A915-403E-8349-2A28DC426A13} = {0AA6DF24-8945-470D-AA28-08128FBAD8A9}
 	EndGlobalSection
 EndGlobal

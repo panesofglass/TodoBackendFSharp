@@ -24,6 +24,7 @@ open System.Threading.Tasks
 open System.Web.Http
 open Newtonsoft.Json
 open TodoStorage
+open TodoStorage.InMemory
 
 [<RoutePrefix("webapi")>]
 [<Route("")>]
@@ -32,7 +33,7 @@ type TodosController() =
 
     member this.GetTodos() =
         async {
-            let! todos = store.PostAndAsyncReply(fun ch -> GetAll ch)
+            let! todos = store.GetAll()
             let todos' =
                 todos
                 |> Array.mapi (fun i x ->
@@ -55,7 +56,7 @@ type TodosController() =
             let newTodo = JsonConvert.DeserializeObject<NewTodo>(content, settings)
 
             // Persist the new todo
-            let! index = store.PostAndAsyncReply(fun ch -> Post(newTodo, ch))
+            let! index = store.Post newTodo
 
             // Return the new todo item
             // TODO: Debug `this.Url.Link`.
@@ -72,7 +73,7 @@ type TodosController() =
         |> Async.StartAsTask
 
     member this.DeleteTodos() =
-        store.Post Clear
+        store.Clear()
         this.Request.CreateResponse(HttpStatusCode.NoContent)
 
 [<RoutePrefix("webapi")>]
@@ -83,7 +84,7 @@ type TodoController() =
     [<Route("{id}", Name = "GetTodo")>]
     member this.GetTodo(id) = // <-- NOTE: the parameter name MUST match the name in the route template.
         async {
-            let! todo = store.PostAndAsyncReply(fun ch -> Get(id, ch))
+            let! todo = store.Get id
             match todo with
             | Some todo ->
                 let todo' = 
@@ -108,7 +109,7 @@ type TodoController() =
             // TODO: Handle invalid result
 
             // Try to patch the todo
-            let! newTodo = store.PostAndAsyncReply(fun ch -> Update(id, patch, ch))
+            let! newTodo = store.Update(id, patch)
 
             match newTodo with
             | Some newTodo ->
@@ -124,7 +125,7 @@ type TodoController() =
 
     member this.DeleteTodo(id) =
         async {
-            let! result = store.PostAndAsyncReply(fun ch -> Remove(id, ch))
+            let! result = store.Remove id
             match result with
             | Some _ -> return this.Request.CreateResponse(HttpStatusCode.NoContent)
             | None   -> return this.Request.CreateResponse(HttpStatusCode.NotFound) }
