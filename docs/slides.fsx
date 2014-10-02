@@ -2,7 +2,7 @@
 - title : 0 to Production in Twelve Weeks with F# on the Web
 - description : The story of how Tachyus developed an application using F# in twelve weeks and replaced a customer's existing system.
 - author : Ryan Riley
-- theme : Night
+- theme : night
 - transition : default
 
 ***
