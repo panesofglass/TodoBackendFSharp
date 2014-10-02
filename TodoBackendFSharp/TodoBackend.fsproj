@@ -119,10 +119,13 @@
     <MSBuild.ExtensionPack.FileSystem.File TaskAction="Replace" RegexPattern="&lt;dependentAssembly&gt;([\s]+.)&lt;assemblyIdentity name=&quot;FSharp\.Core&quot; publicKeyToken=&quot;b03f5f7f11d50a3a&quot; culture=&quot;neutral&quot; \/&gt;([\s\S]+?)&lt;\/dependentAssembly&gt;" RegexOptionList="IgnoreCase|Singleline" Replacement="&lt;dependentAssembly&gt;&#xD;&#xA;        &lt;assemblyIdentity name=&quot;FSharp.Core&quot; publicKeyToken=&quot;b03f5f7f11d50a3a&quot; culture=&quot;neutral&quot; /&gt;&#xD;&#xA;        &lt;bindingRedirect oldVersion=&quot;0.0.0.0-$(TargetFSharpCoreVersion)&quot; newVersion=&quot;$(TargetFSharpCoreVersion)&quot;/&gt;&#xD;&#xA;      &lt;/dependentAssembly&gt;" Files="web.config" />
   </Target>
   <ItemGroup>
-    <Content Include="Sql\GetAll.sql" />
-    <Content Include="Sql\Clear.sql" />
-    <Content Include="Sql\Get.sql" />
+    <None Include="Sql\CreateDatabase.sql" />
+    <None Include="Sql\GetAll.sql" />
+    <None Include="Sql\Clear.sql" />
+    <None Include="Sql\Get.sql" />
     <None Include="Sql\Post.sql" />
+    <None Include="Sql\Update.sql" />
+    <None Include="Sql\Remove.sql" />
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="OptionConverter.fs" />
     <Compile Include="TodoStorage.fs" />
@@ -132,8 +135,6 @@
     <Compile Include="Startup.fs" />
     <Content Include="Web.config" />
     <Content Include="packages.config" />
-    <Content Include="Sql\Update.sql" />
-    <Content Include="Sql\Remove.sql" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Dyfrig">

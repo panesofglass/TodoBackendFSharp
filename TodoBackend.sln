@@ -25,6 +25,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "files", "files", "{0AA6DF24-8945-470D-AA28-08128FBAD8A9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{9BFC2CA9-A915-403E-8349-2A28DC426A13}"
+	ProjectSection(SolutionItems) = preProject
+		docs\files\img\explicit.gif = docs\files\img\explicit.gif
+		docs\files\img\fssf.png = docs\files\img\fssf.png
+		docs\files\img\tachyus.png = docs\files\img\tachyus.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
