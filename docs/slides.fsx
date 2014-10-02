@@ -319,6 +319,12 @@ let remove = async {
 
 <iframe src="https://player.vimeo.com/video/97344498" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="http://vimeo.com/97344498">Scott Wlaschin - Railway Oriented Programming -- error handling in functional languages</a> from <a href="http://vimeo.com/ndcoslo">NDC Conferences</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
 
+---
+
+## [Domain Modeling](http://www.slideshare.net/ScottWlaschin/ddd-with-fsharptypesystemlondonndc2013)
+
+<iframe src="https://player.vimeo.com/video/97507575" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="http://vimeo.com/97507575">Scott Wlaschin - Domain modelling with the F# type system</a> from <a href="http://vimeo.com/ndcoslo">NDC Conferences</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+
 ***
 
 # Resources

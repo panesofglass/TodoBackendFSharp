@@ -36,8 +36,8 @@ type TodosController() =
             let! todos = store.GetAll()
             let todos' =
                 todos
-                |> Array.mapi (fun i x ->
-                    { Url = Uri(this.Request.RequestUri.AbsoluteUri + i.ToString()) // TODO: Uri(this.Url.Link("GetTodo", dict ["id", i]))
+                |> Array.map (fun x ->
+                    { Url = Uri(this.Request.RequestUri.AbsoluteUri + x.Id.ToString()) // TODO: Uri(this.Url.Link("GetTodo", dict ["id", i]))
                       Title = x.Title
                       Completed = x.Completed
                       Order = x.Order })

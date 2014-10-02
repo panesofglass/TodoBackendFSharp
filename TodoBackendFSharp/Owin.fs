@@ -68,8 +68,8 @@ let getTodos (env: OwinEnv) = async {
     let! todos = store.GetAll()
     let todos' =
         todos
-        |> Array.mapi (fun i x ->
-            { Url = makeItemUri env i
+        |> Array.map (fun x ->
+            { Url = makeItemUri env x.Id
               Title = x.Title
               Completed = x.Completed
               Order = x.Order })

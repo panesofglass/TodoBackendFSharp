@@ -31,8 +31,8 @@ let getTodos (request: HttpRequestMessage) = async {
     let! todos = store.GetAll()
     let todos' =
         todos
-        |> Array.mapi (fun i x ->
-            { Url = Uri(request.RequestUri.AbsoluteUri + i.ToString())
+        |> Array.map (fun x ->
+            { Url = Uri(request.RequestUri.AbsoluteUri + x.Id.ToString())
               Title = x.Title
               Completed = x.Completed
               Order = x.Order })
