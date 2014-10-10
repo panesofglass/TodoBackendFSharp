@@ -10,6 +10,10 @@
 *)
 
 (*** hide ***)
+#I "../packages/FSharp.Data.SqlClient.1.3.3/lib/net40"
+#r "Microsoft.SqlServer.Types.dll"
+#r "FSharp.Data.SqlClient.dll"
+
 #r "System.Net.Http.dll"
 #r "../packages/Microsoft.AspNet.WebApi.Client.5.2.2/lib/net45/System.Net.Http.Formatting.dll"
 #r "../packages/Microsoft.AspNet.WebApi.Core.5.2.2/lib/net45/System.Web.Http.dll"
@@ -120,9 +124,30 @@ Small, but growing!
 
 ---
 
-## TODO
+## Quick Sample
 
-Insert samples from FSharp.Data.SqlClient
+*)
+
+open FSharp.Data
+
+let [<Literal>] connectionString =
+    "Data Source=.;Initial Catalog=Todo;Integrated Security=SSPI"
+
+type GetTodos = SqlCommandProvider<"
+    select Id, Title, Completed, [Order] from Todo", connectionString>
+type GetTodo = SqlCommandProvider<"
+    select Id, Title, Completed, [Order] from Todo where Id = @id
+    ", connectionString, SingleRow = true>
+
+let result =
+    async {
+        use cmd = new GetTodo()
+        return! cmd.AsyncExecute(id = 1) }
+    |> Async.RunSynchronously
+
+let todo = GetTodo.Record(0, "New todo", false, 1)
+
+(**
 
 ***
 
