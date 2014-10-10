@@ -21,12 +21,16 @@
 #r "../packages/Newtonsoft.Json.6.0.4/lib/net40/Newtonsoft.Json.dll"
 #r "../packages/Owin.1.0/lib/net40/owin.dll"
 #r "../packages/Frank.3.0.0.9/lib/net45/Frank.dll"
+
 open System
 open System.Net
 open System.Net.Http
 open System.Threading
 open System.Threading.Tasks
 open System.Web.Http
+
+AppDomain.CurrentDomain.SetData("ConnectionString",
+    "Data Source=.;Initial Catalog=dbElephant;Integrated Security=SSPI")
 
 (**
 
@@ -57,7 +61,7 @@ open System.Web.Http
 
 ***
 
-# Platforms
+# Tachyus Software
 
 ---
 
@@ -67,9 +71,18 @@ open System.Web.Http
 
 ## AngularJS SPA for back office
 
+(Straight JavaScript; not currently using F# -> JavaScript compilation)
+
 ---
 
 ## iOS data collection for field
+
+---
+
+## Replaced Existing Systems:
+
+* PHP-based web app for reporting
+* Manual data collection from oil fields
 
 ***
 
@@ -79,29 +92,39 @@ open System.Web.Http
 
 ---
 
-## Less Code
+## CEO Initially Skeptical
 
 ---
 
-## Get Things Done Faster
+## CTO Created Protoype
 
 ---
 
-## Type Safety
+## CEO Convinced
+
+* Solved a talent problem
+* Attract really good people
+* Fit for data analysis
 
 ---
 
-## Expressive Syntax
+## CTO Convinced
 
----
-
-## Full .NET Compatibility
+* Domain-focused programming
+* Math / science-focused solution
+* Full .NET compatibility
+* Cross-platform
 
 ---
 
 ## Active, Strong Community
 
-Small, but growing!
+<blockquote>
+  I like this [tech] community better than any community I've seen out there.
+  <footer>
+    <cite>Dakin Sloss, Tachyus Founder &amp; CEO</cite>
+  </footer>
+</blockquote>
 
 ***
 
@@ -154,6 +177,15 @@ let todo = GetTodo.Record(0, "New todo", false, 1)
 # F# on the Web
 
 ![I think you should be more explicit here in step two](images/explicit.gif)
+
+---
+
+## Getting Started
+
+* [Web Programming with F#](http://fsharp.org/guides/web/)
+* [F# MVC 5 Templates](https://visualstudiogallery.msdn.microsoft.com/39ae8dec-d11a-4ac9-974e-be0fdadec71b)
+* [F# Nancy Templates](https://visualstudiogallery.msdn.microsoft.com/b55b8aac-b11a-4a6a-8a77-2153f46f4e2f)
+* [Web Application Server (F# with SignalR)](http://visualstudiogallery.msdn.microsoft.com/c7ea6e81-b383-40e4-899c-4a5ab9d68f02)
 
 ---
 
@@ -278,7 +310,9 @@ module Sample =
     }
 
     let sampleResource =
-        route "/api/sample" (get getHandler <|> post postHandler)
+        routeResource "/api/sample"
+                    [ get getHandler
+                      post postHandler ]
     
     let registerSample config = config |> register [sampleResource]
 
