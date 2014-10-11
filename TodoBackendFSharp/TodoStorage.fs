@@ -19,7 +19,9 @@ module TodoBackend.TodoStorage
 
 open System
 
-type Agent<'T> = MailboxProcessor<'T>
+let (|Success|Failure|) = function
+    | Choice1Of2 x -> Success x
+    | Choice2Of2 x -> Failure x
 
 /// Todo Model
 type Todo = 
@@ -50,6 +52,8 @@ type IContainer =
     abstract Remove : index: int -> Async<unit option>
 
 module InMemory =
+    type Agent<'T> = MailboxProcessor<'T>
+
     type TodoOperation =
         | GetAll of channel: AsyncReplyChannel<NewTodo[]>
         | Post of todo: NewTodo * channel: AsyncReplyChannel<int>
@@ -122,9 +126,23 @@ module InMemory =
             member __.Remove(index) = agent.PostAndAsyncReply(fun ch -> Remove(index, ch)) }
 
 module Sql =
+    open System.Configuration
     open FSharp.Data
 
+    /// Configured database connection string
     let [<Literal>] dbTodo = "name=Todo"
+
+    /// See below.
+    let private key = "ConnectionString"
+
+    /// The cached connection string.
+    let private connectionString =
+        lazy
+        match AppDomain.CurrentDomain.GetData(key) with
+        | :? string as r -> r
+        | _ -> match System.Configuration.ConfigurationManager.ConnectionStrings.["Todo"] with
+               | null -> failwithf "invalid connection string name: %s" "Todo"
+               | settings -> settings.ConnectionString
 
     type GetAll = SqlCommandProvider<"Sql/GetAll.sql", dbTodo>
     type Post = SqlCommandProvider<"Sql/Post.sql", dbTodo>
@@ -146,7 +164,7 @@ module Sql =
     let store =
         { new IContainer with
             member __.GetAll() = async {
-                use cmd = new GetAll()
+                use cmd = new GetAll(connectionString.Value)
                 let! data = cmd.AsyncExecute()
                 let todos =
                     [| for todo in data do
@@ -154,16 +172,16 @@ module Sql =
                 return todos }
 
             member __.Post(todo) = async {
-                use cmd = new Post()
+                use cmd = new Post(connectionString.Value)
                 let! result = cmd.AsyncExecute(todo.Title, todo.Completed, todo.Order)
                 return int (Seq.head result).Value }
 
             member __.Clear() =
-                use cmd = new Clear()
+                use cmd = new Clear(connectionString.Value)
                 cmd.Execute() |> ignore
 
             member __.Get(index) = async {
-                use cmd = new Get()
+                use cmd = new Get(connectionString.Value)
                 let! data = cmd.AsyncExecute(index)
                 if Seq.isEmpty data then
                     return None
@@ -180,7 +198,7 @@ module Sql =
                                    title = defaultArg patch.Title todo.Title,
                                    completed = defaultArg patch.Completed todo.Completed,
                                    order = defaultArg patch.Order todo.Order)
-                    use cmd = new Update()
+                    use cmd = new Update(connectionString.Value)
                     let! _ = cmd.AsyncExecute(update.Title, update.Completed, update.Order, update.Id)
                     return Some { Id = update.Id; Title = update.Title; Completed = update.Completed; Order = update.Order }
                 | None -> return None }
@@ -188,10 +206,10 @@ module Sql =
             member __.Remove(index) = async {
                 let! result =
                     async {
-                        let cmd = new Remove()
+                        let cmd = new Remove(connectionString.Value)
                         return! cmd.AsyncExecute(index) }
                     |> Async.Catch
                 match result with
-                | Choice1Of2 _ -> return Some()
-                | Choice2Of2 _ -> return None }
+                | Success _ -> return Some()
+                | Failure _ -> return None }
         }

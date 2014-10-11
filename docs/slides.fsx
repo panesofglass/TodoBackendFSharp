@@ -10,6 +10,7 @@
 *)
 
 (*** hide ***)
+#r "System.Configuration.dll"
 #I "../packages/FSharp.Data.SqlClient.1.3.3/lib/net40"
 #r "Microsoft.SqlServer.Types.dll"
 #r "FSharp.Data.SqlClient.dll"
@@ -29,8 +30,15 @@ open System.Threading
 open System.Threading.Tasks
 open System.Web.Http
 
-AppDomain.CurrentDomain.SetData("ConnectionString",
-    "Data Source=.;Initial Catalog=dbElephant;Integrated Security=SSPI")
+let (|Success|Failure|) = function
+    | Choice1Of2 x -> Success x
+    | Choice2Of2 x -> Failure x
+
+let [<Literal>] connectionString =
+    "Data Source=.;Initial Catalog=Todo;Integrated Security=SSPI"
+let [<Literal>] key = "ConnectionString"
+AppDomain.CurrentDomain.SetData(key, connectionString)
+let connString = lazy AppDomain.CurrentDomain.GetData(key)
 
 (**
 
@@ -152,9 +160,6 @@ AppDomain.CurrentDomain.SetData("ConnectionString",
 *)
 
 open FSharp.Data
-
-let [<Literal>] connectionString =
-    "Data Source=.;Initial Catalog=Todo;Integrated Security=SSPI"
 
 type GetTodos = SqlCommandProvider<"
     select Id, Title, Completed, [Order] from Todo", connectionString>
@@ -360,15 +365,19 @@ module App =
 
 *)
 
-let remove = async {
+type Remove = SqlCommandProvider<"
+    delete from Todo
+    where Id = @id", connectionString>
+
+let remove index = async {
     let! result =
         async {
-            failwith "Oh no!"
-            return 1 }
+            let cmd = new Remove()
+            return! cmd.AsyncExecute(index) }
         |> Async.Catch
     match result with
-    | Choice1Of2 _ -> return Some()
-    | Choice2Of2 _ -> return None }
+    | Success _ -> return Some()
+    | Failure _ -> return None }
 
 (**
 
