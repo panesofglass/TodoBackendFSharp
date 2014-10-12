@@ -16,13 +16,18 @@
 #r "FSharp.Data.SqlClient.dll"
 
 #r "System.Net.Http.dll"
+#r "../packages/Microsoft.AspNet.Cors.5.0.0/lib/net45/System.Web.Cors.dll"
 #r "../packages/Microsoft.AspNet.WebApi.Client.5.2.2/lib/net45/System.Net.Http.Formatting.dll"
 #r "../packages/Microsoft.AspNet.WebApi.Core.5.2.2/lib/net45/System.Web.Http.dll"
+#r "../packages/Microsoft.AspNet.WebApi.Owin.5.2.2/lib/net45/System.Web.Http.Owin.dll"
 #r "../packages/Microsoft.Owin.3.0.0/lib/net45/Microsoft.Owin.dll"
+#r "../packages/Microsoft.Owin.Cors.3.0.0/lib/net45/Microsoft.Owin.Cors.dll"
 #r "../packages/Newtonsoft.Json.6.0.4/lib/net40/Newtonsoft.Json.dll"
 #r "../packages/Owin.1.0/lib/net40/owin.dll"
 #r "../packages/Frank.3.0.0.9/lib/net45/Frank.dll"
 
+open Owin
+open Microsoft.Owin
 open System
 open System.Net
 open System.Net.Http
@@ -39,6 +44,9 @@ let [<Literal>] connectionString =
 let [<Literal>] key = "ConnectionString"
 AppDomain.CurrentDomain.SetData(key, connectionString)
 let connString = lazy AppDomain.CurrentDomain.GetData(key)
+
+#load "../TodoBackendFSharp/OptionConverter.fs"
+#load "../TodoBackendFSharp/TodoStorage.fs"
 
 (**
 
@@ -128,7 +136,7 @@ let connString = lazy AppDomain.CurrentDomain.GetData(key)
 ## Active, Strong Community
 
 <blockquote>
-  I like this [tech] community better than any community I've seen out there.
+  I like this community better than any community I've seen out there.
   <footer>
     <cite>Dakin Sloss, Tachyus Founder &amp; CEO</cite>
   </footer>
@@ -189,12 +197,10 @@ let todo = GetTodo.Record(0, "New todo", false, 1)
 
 * [Web Programming with F#](http://fsharp.org/guides/web/)
 * [F# MVC 5 Templates](https://visualstudiogallery.msdn.microsoft.com/39ae8dec-d11a-4ac9-974e-be0fdadec71b)
-* [F# Nancy Templates](https://visualstudiogallery.msdn.microsoft.com/b55b8aac-b11a-4a6a-8a77-2153f46f4e2f)
-* [Web Application Server (F# with SignalR)](http://visualstudiogallery.msdn.microsoft.com/c7ea6e81-b383-40e4-899c-4a5ab9d68f02)
 
 ---
 
-## Simplest HTTP Application
+## HTTP is Functional
 
 *)
 
@@ -203,24 +209,37 @@ type SimplestHttpApp =
 
 (**
 
+## Implement TODO Backend
+
+1. File -> New -> Project
+2. F# ASP.NET MVC 5 and Web API 2
+3. Choose empty Web API project
+4. Add the following NuGet packages:
+ * Microsoft.AspNet.WebApi.Owin
+ * Microsoft.Owin.Cors
+ * Microsoft.Owin.Host.SystemWeb
+
 ---
 
-## HTTP "Services"
+## Configure
 
-    GET /
-    POST /additems
-    POST /setresult?foo=bar
-    GET /setresult?foo=bar
+1. Create Startup.fs
+2. Move contents from Global.asax.fs
+3. Wire up CORS and Web API
 
----
+*)
 
-## HTTP Resources
+[<Sealed>]
+type Startup() =
+    member __.Configuration(builder: IAppBuilder) =
+        let config = new HttpConfiguration()
+        config.MapHttpAttributeRoutes()
+        builder
+            .UseCors(Cors.CorsOptions.AllowAll)
+            .UseWebApi(config)
+        |> ignore
 
-    GET /item/1
-    POST /item/1
-    PUT /item/1
-    DELETE /item/1
-    OPTIONS /item/1
+(**
 
 ---
 
@@ -228,33 +247,29 @@ type SimplestHttpApp =
 
 *)
 
-[<Route("api/simple")>]
-type SimplestWebApiController() =
+[<RoutePrefix("webapi")>]
+[<Route("")>]
+type TodosController() =
     inherit ApiController()
-    member this.Get() =
-        // Do stuff
-        this.Request.CreateResponse()
+
+    member this.GetTodos() =
+        async {
+            let! todos = store.GetAll()
+            let todos' =
+                todos
+                |> Array.map (fun x ->
+                    { Url = Uri(this.Request.RequestUri.AbsoluteUri + x.Id.ToString()) // TODO: Uri(this.Url.Link("GetTodo", dict ["id", i]))
+                      Title = x.Title
+                      Completed = x.Completed
+                      Order = x.Order })
+            return this.Request.CreateResponse(todos') }
+        |> Async.StartAsTask
 
 (**
 
 ---
 
-## *Simplest* HTTP in ASP.NET Web API
-
-*)
-
-type SimplestWebApi() =
-    inherit DelegatingHandler()
-    override this.SendAsync(request, cancelationToken) =
-        // Do stuff
-        let response = request.CreateResponse()
-        Task.FromResult(response)
-
-(**
-
----
-
-## HTTP in F#
+## Extract the handler function
 
 *)
 
@@ -271,59 +286,11 @@ let handler (request: HttpRequestMessage) =
 
 ---
 
-## Putting it All Together
+## Extract the domain function
 
-*)
-
-let handleGet (request: HttpRequestMessage) = async {
-    // Do stuff
-    return request.CreateResponse()
-}
-
-let handlePost value (request: HttpRequestMessage) = async {
-    // Do something with value
-    return request.CreateResponse(HttpStatusCode.Created, value)
-}
-
-[<Route("api/together")>]
-type TogetherController() =
-    inherit ApiController()
-    member this.Get() =
-        handleGet this.Request |> Async.StartAsTask :> Task
-    member this.Post(value) =
-        handlePost value this.Request |> Async.StartAsTask :> Task
-
-(**
+**TODO**
 
 ---
-
-## Or Skip Web API Altogether
-
-*)
-
-open Frank
-open System.Web.Http.HttpResource
-
-module Sample =
-    let getHandler (request: HttpRequestMessage) = async {
-        return request.CreateResponse()
-    }
-    let postHandler (request: HttpRequestMessage) = async {
-        let! value = request.Content.ReadAsStringAsync() |> Async.AwaitTask
-        // Do something with value
-        return request.CreateResponse(HttpStatusCode.Created, value)
-    }
-
-    let sampleResource =
-        routeResource "/api/sample"
-                    [ get getHandler
-                      post postHandler ]
-    
-    let registerSample config = config |> register [sampleResource]
-
-(**
-
-***
 
 ## Why Extract the Handlers?
 
@@ -392,6 +359,34 @@ let remove index = async {
 ## [Domain Modeling](http://www.slideshare.net/ScottWlaschin/ddd-with-fsharptypesystemlondonndc2013)
 
 <iframe src="https://player.vimeo.com/video/97507575" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="http://vimeo.com/97507575">Scott Wlaschin - Domain modelling with the F# type system</a> from <a href="http://vimeo.com/ndcoslo">NDC Conferences</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+
+***
+
+## Skip Web API Altogether
+
+*)
+
+open Frank
+open System.Web.Http.HttpResource
+
+module Sample =
+    let getHandler (request: HttpRequestMessage) = async {
+        return request.CreateResponse()
+    }
+    let postHandler (request: HttpRequestMessage) = async {
+        let! value = request.Content.ReadAsStringAsync() |> Async.AwaitTask
+        // Do something with value
+        return request.CreateResponse(HttpStatusCode.Created, value)
+    }
+
+    let sampleResource =
+        routeResource "/api/sample"
+                    [ get getHandler
+                      post postHandler ]
+    
+    let registerSample config = config |> register [sampleResource]
+
+(**
 
 ***
 
