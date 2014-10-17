@@ -421,6 +421,10 @@
 </tr>
 </table>
 
+</section>
+
+<section>
+
 <h2>Project:</h2>
 
 <h2>Implement Todo Backend</h2>
@@ -438,12 +442,6 @@
 <section>
 
 <h2>Configure</h2>
-
-<ol>
-<li>Create Startup.fs</li>
-<li>Move contents from Global.asax.fs</li>
-<li>Wire up CORS and Web API</li>
-</ol>
 
 <table class="pre"><tr><td class="lines"><pre class="fssnip">
 <span class="l">1: </span>
@@ -495,6 +493,7 @@
 <span class="l">15: </span>
 <span class="l">16: </span>
 <span class="l">17: </span>
+<span class="l">18: </span>
 </pre>
 </td>
 <td class="snippet"><pre class="fssnip">
@@ -509,7 +508,8 @@
             <span class="k">let</span> <span class="i">todos&#39;</span> <span class="o">=</span>
                 <span class="i">todos</span>
                 <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs43', 68)" onmouseover="showTip(event, 'fs43', 68)" class="i">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 69)" onmouseover="showTip(event, 'fs44', 69)" class="i">map</span> (<span class="k">fun</span> <span class="i">x</span> <span class="k">-&gt;</span>
-                    { <span class="i">Url</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs45', 70)" onmouseover="showTip(event, 'fs45', 70)" class="i">Uri</span>(<span class="i">this</span><span class="o">.</span><span class="i">Request</span><span class="o">.</span><span class="i">RequestUri</span><span class="o">.</span><span class="i">AbsoluteUri</span> <span class="o">+</span> <span class="i">x</span><span class="o">.</span><span class="i">Id</span><span class="o">.</span><span class="i">ToString</span>())
+                    <span class="k">let</span> <span class="i">baseUri</span> <span class="o">=</span> <span class="i">this</span><span class="o">.</span><span class="i">Request</span><span class="o">.</span><span class="i">RequestUri</span><span class="o">.</span><span class="i">AbsoluteUri</span>
+                    { <span class="i">Url</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs45', 70)" onmouseover="showTip(event, 'fs45', 70)" class="i">Uri</span>(<span class="i">baseUri</span> <span class="o">+</span> <span class="i">x</span><span class="o">.</span><span class="i">Id</span><span class="o">.</span><span class="i">ToString</span>())
                       <span class="i">Title</span> <span class="o">=</span> <span class="i">x</span><span class="o">.</span><span class="i">Title</span>
                       <span class="i">Completed</span> <span class="o">=</span> <span class="i">x</span><span class="o">.</span><span class="i">Completed</span>
                       <span class="i">Order</span> <span class="o">=</span> <span class="i">x</span><span class="o">.</span><span class="i">Order</span> })
@@ -718,6 +718,25 @@
 
 <section>
 
+<section>
+
+<h1>Modularize</h1>
+
+</section>
+
+<section>
+
+<h2>Remaining Problems:</h2>
+
+<ul>
+<li>The Web API controller cannot be nested under a <code>module</code></li>
+<li>Web API controller must be named with <code>Controller</code> as the suffix</li>
+</ul>
+
+</section>
+
+<section>
+
 <h2>Skip Web API Altogether</h2>
 
 <table class="pre"><tr><td class="lines"><pre class="fssnip">
@@ -765,6 +784,8 @@
 </td>
 </tr>
 </table>
+
+</section>
 
 </section>
 
