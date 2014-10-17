@@ -70,9 +70,11 @@ let connString = lazy AppDomain.CurrentDomain.GetData(key)
 ## Agenda
 
 - Tachyus' success with F#
-- Data access
-- Web APIs
-- Domain mapping
+- Build an F# web API
+  - Getting started
+  - Data access
+  - Web APIs
+  - Domain mapping
 - Questions
 
 ***
@@ -144,6 +146,33 @@ let connString = lazy AppDomain.CurrentDomain.GetData(key)
 
 ***
 
+# F# on the Web
+
+---
+
+## Getting Started
+
+* [Web Programming with F#](http://fsharp.org/guides/web/)
+* [F# MVC 5 Templates](https://visualstudiogallery.msdn.microsoft.com/39ae8dec-d11a-4ac9-974e-be0fdadec71b)
+
+---
+
+## Demo:
+## F# MVC 5 Template
+
+1. File -> New -> Project
+2. F# ASP.NET MVC 5 and Web API 2
+3. Choose empty Web API project
+
+***
+
+# Project:
+## Todo Backend
+
+http://todo-backend.thepete.net/
+
+***
+
 # F# and Data Access
 
 ---
@@ -185,18 +214,16 @@ let todo = GetTodo.Record(0, "New todo", false, 1)
 
 (**
 
-***
-
-# F# on the Web
-
-![I think you should be more explicit here in step two](images/explicit.gif)
-
 ---
 
-## Getting Started
+## Project:
+## Implement Todo Data Access
 
-* [Web Programming with F#](http://fsharp.org/guides/web/)
-* [F# MVC 5 Templates](https://visualstudiogallery.msdn.microsoft.com/39ae8dec-d11a-4ac9-974e-be0fdadec71b)
+***
+
+# Leveraging F#
+
+![I think you should be more explicit here in step two](images/explicit.gif)
 
 ---
 
@@ -209,12 +236,13 @@ type SimplestHttpApp =
 
 (**
 
-## Implement TODO Backend
+---
 
-1. File -> New -> Project
-2. F# ASP.NET MVC 5 and Web API 2
-3. Choose empty Web API project
-4. Add the following NuGet packages:
+## Project:
+## Implement Todo Backend
+
+Add the following NuGet packages:
+
  * Microsoft.AspNet.WebApi.Owin
  * Microsoft.Owin.Cors
  * Microsoft.Owin.Host.SystemWeb
@@ -222,10 +250,6 @@ type SimplestHttpApp =
 ---
 
 ## Configure
-
-1. Create Startup.fs
-2. Move contents from Global.asax.fs
-3. Wire up CORS and Web API
 
 *)
 
@@ -258,7 +282,8 @@ type TodosController() =
             let todos' =
                 todos
                 |> Array.map (fun x ->
-                    { Url = Uri(this.Request.RequestUri.AbsoluteUri + x.Id.ToString()) // TODO: Uri(this.Url.Link("GetTodo", dict ["id", i]))
+                    let baseUri = this.Request.RequestUri.AbsoluteUri
+                    { Url = Uri(baseUri + x.Id.ToString())
                       Title = x.Title
                       Completed = x.Completed
                       Order = x.Order })
@@ -276,11 +301,19 @@ type TodosController() =
 type SimplestFSharpHttpApp =
     HttpRequestMessage -> Async<HttpResponseMessage>
 
-let handler (request: HttpRequestMessage) =
-    async {
-        // Do stuff
-        return request.CreateResponse()
-    }
+let handler (request: HttpRequestMessage) = async {
+    let! todos = store.GetAll()
+    let todos' = todos // Do stuff
+    return request.CreateResponse(todos') }
+
+[<RoutePrefix("webapi")>]
+[<Route("")>]
+type TodosController() =
+    inherit ApiController()
+    member this.GetTodos() =
+        this.Request
+        |> handler
+        |> Async.StartAsTask
 
 (**
 
@@ -288,9 +321,19 @@ let handler (request: HttpRequestMessage) =
 
 ## Extract the domain function
 
-**TODO**
+*)
 
----
+let mapTodos (todos: seq<Todo>) =
+    todos
+    |> Array.map (fun x ->
+        { Url = Uri(this.Request.RequestUri.AbsoluteUri + x.Id.ToString())
+          Title = x.Title
+          Completed = x.Completed
+          Order = x.Order })
+
+(**
+
+***
 
 ## Why Extract the Handlers?
 
@@ -361,6 +404,17 @@ let remove index = async {
 <iframe src="https://player.vimeo.com/video/97507575" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="http://vimeo.com/97507575">Scott Wlaschin - Domain modelling with the F# type system</a> from <a href="http://vimeo.com/ndcoslo">NDC Conferences</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
 
 ***
+
+# Modularize
+
+---
+
+## Remaining Problems:
+
+* The Web API controller cannot be nested under a `module`
+* Web API controller must be named with `Controller` as the suffix
+
+---
 
 ## Skip Web API Altogether
 
