@@ -144,6 +144,31 @@ let connString = lazy AppDomain.CurrentDomain.GetData(key)
 
 ***
 
+# F# on the Web
+
+---
+
+## Getting Started
+
+* [Web Programming with F#](http://fsharp.org/guides/web/)
+* [F# MVC 5 Templates](https://visualstudiogallery.msdn.microsoft.com/39ae8dec-d11a-4ac9-974e-be0fdadec71b)
+
+---
+
+## Demo: F# MVC 5 Template
+
+1. File -> New -> Project
+2. F# ASP.NET MVC 5 and Web API 2
+3. Choose empty Web API project
+
+***
+
+# Project: Todo Backend
+
+http://todo-backend.thepete.net/
+
+***
+
 # F# and Data Access
 
 ---
@@ -185,18 +210,15 @@ let todo = GetTodo.Record(0, "New todo", false, 1)
 
 (**
 
-***
-
-# F# on the Web
-
-![I think you should be more explicit here in step two](images/explicit.gif)
-
 ---
 
-## Getting Started
+## Project: Implement Todo Data Access
 
-* [Web Programming with F#](http://fsharp.org/guides/web/)
-* [F# MVC 5 Templates](https://visualstudiogallery.msdn.microsoft.com/39ae8dec-d11a-4ac9-974e-be0fdadec71b)
+***
+
+# Leveraging the Power of F#
+
+![I think you should be more explicit here in step two](images/explicit.gif)
 
 ---
 
@@ -209,12 +231,10 @@ type SimplestHttpApp =
 
 (**
 
-## Implement TODO Backend
+## Project: Implement Todo Backend
 
-1. File -> New -> Project
-2. F# ASP.NET MVC 5 and Web API 2
-3. Choose empty Web API project
-4. Add the following NuGet packages:
+Add the following NuGet packages:
+
  * Microsoft.AspNet.WebApi.Owin
  * Microsoft.Owin.Cors
  * Microsoft.Owin.Host.SystemWeb
@@ -258,7 +278,7 @@ type TodosController() =
             let todos' =
                 todos
                 |> Array.map (fun x ->
-                    { Url = Uri(this.Request.RequestUri.AbsoluteUri + x.Id.ToString()) // TODO: Uri(this.Url.Link("GetTodo", dict ["id", i]))
+                    { Url = Uri(this.Request.RequestUri.AbsoluteUri + x.Id.ToString())
                       Title = x.Title
                       Completed = x.Completed
                       Order = x.Order })
@@ -276,11 +296,19 @@ type TodosController() =
 type SimplestFSharpHttpApp =
     HttpRequestMessage -> Async<HttpResponseMessage>
 
-let handler (request: HttpRequestMessage) =
-    async {
-        // Do stuff
-        return request.CreateResponse()
-    }
+let handler (request: HttpRequestMessage) = async {
+    let! todos = store.GetAll()
+    let todos' = todos // Do stuff
+    return request.CreateResponse(todos') }
+
+[<RoutePrefix("webapi")>]
+[<Route("")>]
+type TodosController() =
+    inherit ApiController()
+    member this.GetTodos() =
+        this.Request
+        |> handler
+        |> Async.StartAsTask
 
 (**
 
@@ -288,9 +316,19 @@ let handler (request: HttpRequestMessage) =
 
 ## Extract the domain function
 
-**TODO**
+*)
 
----
+let mapTodos (todos: seq<Todo>) =
+    todos
+    |> Array.map (fun x ->
+        { Url = Uri(this.Request.RequestUri.AbsoluteUri + x.Id.ToString())
+          Title = x.Title
+          Completed = x.Completed
+          Order = x.Order })
+
+(**
+
+***
 
 ## Why Extract the Handlers?
 
