@@ -213,3 +213,7 @@ module Sql =
                 | Success _ -> return Some()
                 | Failure _ -> return None }
         }
+
+    let demo this that = this + that
+    type Demo (this) =
+        member x.Invoke(that) = this + that

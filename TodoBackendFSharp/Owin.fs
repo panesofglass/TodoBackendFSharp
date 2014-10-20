@@ -52,7 +52,7 @@ let methodNotAllowed (env: OwinEnv) =
     env.[Constants.responseReasonPhrase] <- "Method Not Allowed"
     async.Return()
 
-let makeItemUri env index =
+let private makeItemUri env index =
     let environ = Environment.toEnvironment env
     let baseUri = Uri(environ.GetBaseUri().Value)
     if environ.RequestPathBase = "/" then
@@ -60,19 +60,19 @@ let makeItemUri env index =
     else
         Uri(baseUri, sprintf "%s/%i" environ.RequestPathBase index)
 
+let private makeTodo env (todo: NewTodo) =
+    { Url = makeItemUri env todo.Id
+      Title = todo.Title
+      Completed = todo.Completed
+      Order = todo.Order }
+
 (**
  * Root resource handlers
  *)
 
 let getTodos (env: OwinEnv) = async {
     let! todos = store.GetAll()
-    let todos' =
-        todos
-        |> Array.map (fun x ->
-            { Url = makeItemUri env x.Id
-              Title = x.Title
-              Completed = x.Completed
-              Order = x.Order })
+    let todos' = todos |> Array.map (makeTodo env)
     let result = serialize todos'
     let stream : Stream = unbox env.[Constants.responseBody]
     do! stream.AsyncWrite(result, 0, result.Length) }
@@ -87,11 +87,7 @@ let postTodo (env: OwinEnv) = async {
     let! index = store.Post newTodo
 
     // Return the new todo item
-    let todo =
-        { Url = makeItemUri env index
-          Title = newTodo.Title
-          Completed = newTodo.Completed
-          Order = newTodo.Order }
+    let todo = makeTodo env { newTodo with Id = index }
     env.[Constants.responseStatusCode] <- 201
     env.[Constants.responseReasonPhrase] <- "Created"
     let headers : OwinHeaders = unbox env.[Constants.responseHeaders]
@@ -115,11 +111,7 @@ let getTodo index (env: OwinEnv) = async {
     let! todo = store.Get index
     match todo with
     | Some todo ->
-        let todo' = 
-            { Url = makeItemUri env index
-              Title = todo.Title
-              Completed = todo.Completed
-              Order = todo.Order }
+        let todo' = makeTodo env todo
         let result = serialize todo'
         let stream : Stream = unbox env.[Constants.responseBody]
         do! stream.AsyncWrite(result, 0, result.Length)
@@ -137,11 +129,7 @@ let patchTodo index (env: OwinEnv) = async {
     match newTodo with
     | Some newTodo ->
         // Return the new todo item
-        let todo =
-            { Url = makeItemUri env index
-              Title = newTodo.Title
-              Completed = newTodo.Completed
-              Order = newTodo.Order }
+        let todo = makeTodo env newTodo
         env.[Constants.responseStatusCode] <- 200
         env.[Constants.responseReasonPhrase] <- "OK"
         let result = serialize todo

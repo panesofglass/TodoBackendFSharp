@@ -26,6 +26,14 @@ open Newtonsoft.Json
 open TodoStorage
 open TodoStorage.InMemory
 
+module private Utils =
+
+    let makeTodo (uri: Uri) (todo: NewTodo) =
+        { Url = Uri(uri.AbsoluteUri + todo.Id.ToString()) // TODO: Uri(this.Url.Link("GetTodo", dict ["id", i]))
+          Title = todo.Title
+          Completed = todo.Completed
+          Order = todo.Order }
+
 [<RoutePrefix("webapi")>]
 [<Route("")>]
 type TodosController() =
@@ -34,13 +42,7 @@ type TodosController() =
     member this.GetTodos() =
         async {
             let! todos = store.GetAll()
-            let todos' =
-                todos
-                |> Array.map (fun x ->
-                    { Url = Uri(this.Request.RequestUri.AbsoluteUri + x.Id.ToString()) // TODO: Uri(this.Url.Link("GetTodo", dict ["id", i]))
-                      Title = x.Title
-                      Completed = x.Completed
-                      Order = x.Order })
+            let todos' = todos |> Array.map (Utils.makeTodo this.Request.RequestUri)
             return this.Request.CreateResponse(todos') }
         |> Async.StartAsTask
 
@@ -62,11 +64,7 @@ type TodosController() =
             // TODO: Debug `this.Url.Link`.
             //let newUrl = Uri(this.Url.Link("GetTodo", dict ["id", index]))
             let newUrl = Uri(this.Request.RequestUri.AbsoluteUri + index.ToString())
-            let todo =
-                { Url = newUrl
-                  Title = newTodo.Title
-                  Completed = newTodo.Completed
-                  Order = newTodo.Order }
+            let todo = Utils.makeTodo this.Request.RequestUri { newTodo with Id = index }
             let response = this.Request.CreateResponse(HttpStatusCode.Created, todo)
             response.Headers.Location <- newUrl
             return response }
@@ -87,11 +85,7 @@ type TodoController() =
             let! todo = store.Get id
             match todo with
             | Some todo ->
-                let todo' = 
-                    { Url = this.Request.RequestUri
-                      Title = todo.Title
-                      Completed = todo.Completed
-                      Order = todo.Order }
+                let todo' = Utils.makeTodo this.Request.RequestUri todo
                 return this.Request.CreateResponse(todo')
             | None -> return this.Request.CreateResponse(HttpStatusCode.NotFound) }
         |> Async.StartAsTask
@@ -114,11 +108,7 @@ type TodoController() =
             match newTodo with
             | Some newTodo ->
                 // Return the new todo item
-                let todo =
-                    { Url = this.Request.RequestUri
-                      Title = newTodo.Title
-                      Completed = newTodo.Completed
-                      Order = newTodo.Order }
+                let todo = Utils.makeTodo this.Request.RequestUri newTodo
                 return this.Request.CreateResponse(todo)
             | None -> return this.Request.CreateResponse(HttpStatusCode.NotFound) }
         |> Async.StartAsTask
