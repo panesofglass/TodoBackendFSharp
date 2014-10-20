@@ -27,15 +27,22 @@ open Newtonsoft.Json
 open TodoStorage
 open TodoStorage.InMemory
 
-let private makeTodo (uri: Uri) (todo: NewTodo) =
-    { Url = Uri(uri.AbsoluteUri + todo.Id.ToString()) // TODO: Uri(this.Url.Link("GetTodo", dict ["id", i]))
+let private makeItemUri (request: HttpRequestMessage) index =
+    let uri = request.RequestUri
+    let path = uri.AbsolutePath.Substring(1) // Skip the first '/'
+    if path.[path.Length - 1] = '/' then
+        Uri(uri.AbsoluteUri + string index)
+    else uri
+
+let private makeTodo request (todo: NewTodo) =
+    { Url = makeItemUri request todo.Id
       Title = todo.Title
       Completed = todo.Completed
       Order = todo.Order }
 
 let getTodos (request: HttpRequestMessage) = async {
     let! todos = store.GetAll()
-    let todos' = todos |> Array.map (makeTodo request.RequestUri)
+    let todos' = todos |> Array.map (makeTodo request)
     return request.CreateResponse(todos') }
 
 let postTodo (request: HttpRequestMessage) = async {
@@ -48,9 +55,7 @@ let postTodo (request: HttpRequestMessage) = async {
     let! index = store.Post newTodo
 
     // Return the new todo item
-    // TODO: Debug `this.Url.Link`.
-    //let newUrl = Uri(this.Url.Link("GetTodo", dict ["id", index]))
-    let todo = makeTodo request.RequestUri { newTodo with Id = index }
+    let todo = makeTodo request { newTodo with Id = index }
     let response = request.CreateResponse(HttpStatusCode.Created, todo)
     response.Headers.Location <- todo.Url
     return response }
@@ -67,7 +72,7 @@ let getTodo (request: HttpRequestMessage) = async {
         let! todo = store.Get id
         match todo with
         | Some todo ->
-            let todo' = makeTodo request.RequestUri todo
+            let todo' = makeTodo request todo
             return request.CreateResponse(todo')
         | None -> return request.CreateResponse(HttpStatusCode.NotFound)
     | None -> return request.CreateResponse(HttpStatusCode.NotFound) }
@@ -88,7 +93,7 @@ let patchTodo (request: HttpRequestMessage) = async {
         match newTodo with
         | Some newTodo ->
             // Return the new todo item
-            let todo = makeTodo request.RequestUri newTodo
+            let todo = makeTodo request newTodo
             return request.CreateResponse(todo)
         | None -> return request.CreateResponse(HttpStatusCode.NotFound)
     | None -> return request.CreateResponse(HttpStatusCode.NotFound) }

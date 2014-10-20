@@ -28,8 +28,17 @@ open TodoStorage.InMemory
 
 module private Utils =
 
-    let makeTodo (uri: Uri) (todo: NewTodo) =
-        { Url = Uri(uri.AbsoluteUri + todo.Id.ToString()) // TODO: Uri(this.Url.Link("GetTodo", dict ["id", i]))
+    let makeItemUri (request: HttpRequestMessage) index =
+        // TODO: Get the UrlHelper working
+        //Uri(request.GetUrlHelper().Link("GetTodo", dict ["id", index]))
+        let uri = request.RequestUri
+        let path = uri.AbsolutePath.Substring(1) // Skip the first '/'
+        if path.[path.Length - 1] = '/' then
+            Uri(uri.AbsoluteUri + string index)
+        else uri
+
+    let makeTodo request (todo: NewTodo) =
+        { Url = makeItemUri request todo.Id
           Title = todo.Title
           Completed = todo.Completed
           Order = todo.Order }
@@ -42,7 +51,7 @@ type TodosController() =
     member this.GetTodos() =
         async {
             let! todos = store.GetAll()
-            let todos' = todos |> Array.map (Utils.makeTodo this.Request.RequestUri)
+            let todos' = todos |> Array.map (Utils.makeTodo this.Request)
             return this.Request.CreateResponse(todos') }
         |> Async.StartAsTask
 
@@ -64,7 +73,7 @@ type TodosController() =
             // TODO: Debug `this.Url.Link`.
             //let newUrl = Uri(this.Url.Link("GetTodo", dict ["id", index]))
             let newUrl = Uri(this.Request.RequestUri.AbsoluteUri + index.ToString())
-            let todo = Utils.makeTodo this.Request.RequestUri { newTodo with Id = index }
+            let todo = Utils.makeTodo this.Request { newTodo with Id = index }
             let response = this.Request.CreateResponse(HttpStatusCode.Created, todo)
             response.Headers.Location <- newUrl
             return response }
@@ -85,7 +94,7 @@ type TodoController() =
             let! todo = store.Get id
             match todo with
             | Some todo ->
-                let todo' = Utils.makeTodo this.Request.RequestUri todo
+                let todo' = Utils.makeTodo this.Request todo
                 return this.Request.CreateResponse(todo')
             | None -> return this.Request.CreateResponse(HttpStatusCode.NotFound) }
         |> Async.StartAsTask
@@ -108,7 +117,7 @@ type TodoController() =
             match newTodo with
             | Some newTodo ->
                 // Return the new todo item
-                let todo = Utils.makeTodo this.Request.RequestUri newTodo
+                let todo = Utils.makeTodo this.Request newTodo
                 return this.Request.CreateResponse(todo)
             | None -> return this.Request.CreateResponse(HttpStatusCode.NotFound) }
         |> Async.StartAsTask
