@@ -114,7 +114,7 @@ let connString = lazy AppDomain.CurrentDomain.GetData(key)
 
 ---
 
-## CTO Created Protoype
+## CTO Created Prototype
 
 ---
 
