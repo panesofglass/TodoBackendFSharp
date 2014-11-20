@@ -81,21 +81,21 @@ let connString = lazy AppDomain.CurrentDomain.GetData(key)
 
 # Tachyus Software
 
----
+***
 
 ## ASP.NET Web API via Azure Web Sites
 
----
+***
 
 ## AngularJS SPA for back office
 
 (Straight JavaScript; not currently using F# -> JavaScript compilation)
 
----
+***
 
 ## iOS data collection for field
 
----
+***
 
 ## Replaced Existing Systems:
 
@@ -108,15 +108,15 @@ let connString = lazy AppDomain.CurrentDomain.GetData(key)
 
 ![F# Software Foundation](images/fssf.png)
 
----
+***
 
 ## CEO Initially Skeptical
 
----
+***
 
 ## CTO Created Protoype
 
----
+***
 
 ## CEO Convinced
 
@@ -124,7 +124,7 @@ let connString = lazy AppDomain.CurrentDomain.GetData(key)
 * Attract really good people
 * Fit for data analysis
 
----
+***
 
 ## CTO Convinced
 
@@ -133,7 +133,7 @@ let connString = lazy AppDomain.CurrentDomain.GetData(key)
 * Full .NET compatibility
 * Cross-platform
 
----
+***
 
 ## Active, Strong Community
 
@@ -148,14 +148,14 @@ let connString = lazy AppDomain.CurrentDomain.GetData(key)
 
 # F# on the Web
 
----
+***
 
 ## Getting Started
 
 * [Web Programming with F#](http://fsharp.org/guides/web/)
 * [F# MVC 5 Templates](https://visualstudiogallery.msdn.microsoft.com/39ae8dec-d11a-4ac9-974e-be0fdadec71b)
 
----
+***
 
 ## Demo:
 ## F# MVC 5 Template
@@ -175,11 +175,11 @@ http://todo-backend.thepete.net/
 
 # F# and Data Access
 
----
+***
 
 ## LINQ to SQL or Entity Framework?
 
----
+***
 
 ## [**FSharp.Data.SqlClient**](https://fsprojects.github.io/FSharp.Data.SqlClient/)
 
@@ -190,7 +190,7 @@ http://todo-backend.thepete.net/
   </footer>
 </blockquote>
 
----
+***
 
 ## Quick Sample
 
@@ -214,7 +214,7 @@ let todo = GetTodo.Record(0, "New todo", false, 1)
 
 (**
 
----
+***
 
 ## Project:
 ## Implement Todo Data Access
@@ -225,7 +225,7 @@ let todo = GetTodo.Record(0, "New todo", false, 1)
 
 ![I think you should be more explicit here in step two](images/explicit.gif)
 
----
+***
 
 ## HTTP is Functional
 
@@ -236,7 +236,7 @@ type SimplestHttpApp =
 
 (**
 
----
+***
 
 ## Project:
 ## Implement Todo Backend
@@ -247,7 +247,7 @@ Add the following NuGet packages:
  * Microsoft.Owin.Cors
  * Microsoft.Owin.Host.SystemWeb
 
----
+***
 
 ## Configure
 
@@ -265,7 +265,7 @@ type Startup() =
 
 (**
 
----
+***
 
 ## HTTP in ASP.NET Web API
 
@@ -292,7 +292,7 @@ type TodosController() =
 
 (**
 
----
+***
 
 ## Extract the handler function
 
@@ -317,7 +317,7 @@ type TodosController() =
 
 (**
 
----
+***
 
 ## Extract the domain function
 
@@ -344,7 +344,7 @@ let mapTodos (todos: seq<Todo>) =
     </footer>
 </blockquote>
 
----
+***
 
 ## Map Domain into the Web
 
@@ -369,7 +369,7 @@ module App =
 
 (**
 
----
+***
 
 ## Handling Domain Exceptions
 
@@ -391,13 +391,13 @@ let remove index = async {
 
 (**
 
----
+***
 
 ## [Railway-Oriented Programming](http://fsharpforfunandprofit.com/posts/recipe-part2/)
 
 <iframe src="https://player.vimeo.com/video/97344498" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="http://vimeo.com/97344498">Scott Wlaschin - Railway Oriented Programming -- error handling in functional languages</a> from <a href="http://vimeo.com/ndcoslo">NDC Conferences</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
 
----
+***
 
 ## [Domain Modeling](http://www.slideshare.net/ScottWlaschin/ddd-with-fsharptypesystemlondonndc2013)
 
@@ -407,14 +407,14 @@ let remove index = async {
 
 # Modularize
 
----
+***
 
 ## Remaining Problems:
 
 * The Web API controller cannot be nested under a `module`
 * Web API controller must be named with `Controller` as the suffix
 
----
+***
 
 ## Skip Web API Altogether
 
@@ -446,23 +446,23 @@ module Sample =
 
 # Resources
 
----
+***
 
 ## [F# Software Foundation](http://fsharp.org/guides/web)
 
----
+***
 
 ## [Community for F#](http://c4fsharp.net/)
 
----
+***
 
 ## Sergey Tihon's [F# Weekly](http://sergeytihon.wordpress.com/category/f-weekly/)
 
----
+***
 
 ## [F# for Fun and Profit](http://fsharpforfunandprofit.com/)
 
----
+***
 
 ## [Real World Functional Programming](http://msdn.microsoft.com/en-us/library/vstudio/hh314518(v=vs.100).aspx) on MSDN
 
