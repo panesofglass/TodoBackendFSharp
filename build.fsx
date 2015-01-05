@@ -11,7 +11,7 @@ open Fake.Git
 
 // Git configuration (used for publishing documentation in gh-pages branch)
 // The profile where the project is posted 
-let gitHome = "git@github.com:panesofglass"
+let gitHome = "https://github.com/panesofglass"
 // The name of the project on GitHub
 let gitName = "TodoBackendFSharp"
 

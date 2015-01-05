@@ -10,7 +10,7 @@ let copyFiles() =
         CopyRecursive files output true |> Log "Copying file: "
     else ()
 
-#load "../packages/FsReveal.0.0.5-beta/fsreveal/fsreveal.fsx"
+#load "../packages/FsReveal/fsreveal/fsreveal.fsx"
 open FsReveal
 
 let outDir = Path.Combine(__SOURCE_DIRECTORY__, "output")
