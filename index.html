@@ -87,41 +87,51 @@
 <div class="tip" id="fs49">val request : HttpRequestMessage</div>
 <div class="tip" id="fs50">val todos : obj</div>
 <div class="tip" id="fs51">val todos&#39; : obj</div>
-<div class="tip" id="fs52">val mapTodos : todos:&#39;a [] -&gt; &#39;b []<br /><br />Full name: Document.mapTodos</div>
-<div class="tip" id="fs53">val todos : &#39;a []</div>
-<div class="tip" id="fs54">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
-<div class="tip" id="fs55">val domainLogic : value:string -&gt; string<br /><br />Full name: Document.Domain.domainLogic</div>
-<div class="tip" id="fs56">val value : string</div>
-<div class="tip" id="fs57">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
-<div class="tip" id="fs58">String.ToUpper() : string<br />String.ToUpper(culture: Globalization.CultureInfo) : string</div>
-<div class="tip" id="fs59">val unwrapRequest : request:HttpRequestMessage -&gt; Async&lt;string&gt;<br /><br />Full name: Document.Web.unwrapRequest</div>
-<div class="tip" id="fs60">property HttpRequestMessage.Content: HttpContent</div>
-<div class="tip" id="fs61">HttpContent.ReadAsStringAsync() : Task&lt;string&gt;</div>
-<div class="tip" id="fs62">static member Async.AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;</div>
-<div class="tip" id="fs63">val wrapResponse : value:&#39;a -&gt; request:HttpRequestMessage -&gt; &#39;b<br /><br />Full name: Document.Web.wrapResponse</div>
-<div class="tip" id="fs64">val value : &#39;a</div>
-<div class="tip" id="fs65">val handle : request:HttpRequestMessage -&gt; Async&lt;&#39;a&gt;<br /><br />Full name: Document.App.handle</div>
-<div class="tip" id="fs66">Multiple items<br />module Web<br /><br />from Document<br /><br />--------------------<br />namespace System.Web</div>
-<div class="tip" id="fs67">val value&#39; : string</div>
-<div class="tip" id="fs68">module Domain<br /><br />from Document</div>
-<div class="tip" id="fs69">type Remove = obj<br /><br />Full name: Document.Remove</div>
-<div class="tip" id="fs70">val remove : index:&#39;a -&gt; Async&lt;unit option&gt;<br /><br />Full name: Document.remove</div>
-<div class="tip" id="fs71">val index : &#39;a</div>
-<div class="tip" id="fs72">val result : Choice&lt;obj,exn&gt;</div>
-<div class="tip" id="fs73">val cmd : Remove</div>
-<div class="tip" id="fs74">static member Async.Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;</div>
-<div class="tip" id="fs75">active recognizer Success: Choice&lt;&#39;a,&#39;b&gt; -&gt; Choice&lt;&#39;a,&#39;b&gt;<br /><br />Full name: Document.( |Success|Failure| )</div>
-<div class="tip" id="fs76">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
-<div class="tip" id="fs77">Multiple items<br />val Failure : message:string -&gt; exn<br /><br />Full name: Microsoft.FSharp.Core.Operators.Failure<br /><br />--------------------<br />active recognizer Failure: Choice&lt;&#39;a,&#39;b&gt; -&gt; Choice&lt;&#39;a,&#39;b&gt;<br /><br />Full name: Document.( |Success|Failure| )</div>
-<div class="tip" id="fs78">union case Option.None: Option&lt;&#39;T&gt;</div>
-<div class="tip" id="fs79">module Sample<br /><br />from Document</div>
-<div class="tip" id="fs80">val getHandler : request:HttpRequestMessage -&gt; Async&lt;&#39;a&gt;<br /><br />Full name: Document.Sample.getHandler</div>
-<div class="tip" id="fs81">val postHandler : request:HttpRequestMessage -&gt; Async&lt;&#39;a&gt;<br /><br />Full name: Document.Sample.postHandler</div>
-<div class="tip" id="fs82">type HttpStatusCode =<br />&#160;&#160;| Continue = 100<br />&#160;&#160;| SwitchingProtocols = 101<br />&#160;&#160;| OK = 200<br />&#160;&#160;| Created = 201<br />&#160;&#160;| Accepted = 202<br />&#160;&#160;| NonAuthoritativeInformation = 203<br />&#160;&#160;| NoContent = 204<br />&#160;&#160;| ResetContent = 205<br />&#160;&#160;| PartialContent = 206<br />&#160;&#160;| MultipleChoices = 300<br />&#160;&#160;...<br /><br />Full name: System.Net.HttpStatusCode</div>
-<div class="tip" id="fs83">field HttpStatusCode.Created = 201</div>
-<div class="tip" id="fs84">val sampleResource : obj<br /><br />Full name: Document.Sample.sampleResource</div>
-<div class="tip" id="fs85">val registerSample : config:&#39;a -&gt; &#39;b<br /><br />Full name: Document.Sample.registerSample</div>
-<div class="tip" id="fs86">val config : &#39;a</div>
+<div class="tip" id="fs52">Multiple items<br />type TodoController =<br />&#160;&#160;inherit obj<br />&#160;&#160;new : unit -&gt; TodoController<br />&#160;&#160;member GetTodos : unit -&gt; &#39;a<br /><br />Full name: Document.TodoController<br /><br />--------------------<br />new : unit -&gt; TodoController</div>
+<div class="tip" id="fs53">Multiple items<br />member TodoController.GetTodos : unit -&gt; &#39;a<br /><br />Full name: Document.TodoController.GetTodos<br /><br />--------------------<br />type GetTodos = obj<br /><br />Full name: Document.GetTodos</div>
+<div class="tip" id="fs54">type SimplestFSharpApp = HttpRequestMessage -&gt; Async&lt;HttpResponseMessage&gt;<br /><br />Full name: Document.SimplestFSharpApp</div>
+<div class="tip" id="fs55">type StateTransitions&lt;&#39;T&gt; = HttpRequestMessage -&gt; (HttpRequestMessage -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;T -&gt; Async&lt;&#39;T&gt;) -&gt; Async&lt;HttpResponseMessage&gt;<br /><br />Full name: Document.StateTransitions&lt;_&gt;</div>
+<div class="tip" id="fs56">type ExplicitTransitions&lt;&#39;T&gt; = HttpRequestMessage -&gt; HttpResponseMessage -&gt; Async&lt;(&#39;T -&gt; HttpResponseMessage * &#39;T)&gt;<br /><br />Full name: Document.ExplicitTransitions&lt;_&gt;</div>
+<div class="tip" id="fs57">val mapTodos : request:HttpRequestMessage -&gt; todos:seq&lt;&#39;a&gt; -&gt; &#39;b []<br /><br />Full name: Document.mapTodos</div>
+<div class="tip" id="fs58">val todos : seq&lt;&#39;a&gt;</div>
+<div class="tip" id="fs59">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs60">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs61">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs62">property HttpRequestMessage.RequestUri: Uri</div>
+<div class="tip" id="fs63">property Uri.AbsoluteUri: string</div>
+<div class="tip" id="fs64">val toArray : source:seq&lt;&#39;T&gt; -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Seq.toArray</div>
+<div class="tip" id="fs65">val domainLogic : value:string -&gt; string<br /><br />Full name: Document.Domain.domainLogic</div>
+<div class="tip" id="fs66">val value : string</div>
+<div class="tip" id="fs67">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs68">String.ToUpper() : string<br />String.ToUpper(culture: Globalization.CultureInfo) : string</div>
+<div class="tip" id="fs69">val unwrapRequest : request:HttpRequestMessage -&gt; Async&lt;string&gt;<br /><br />Full name: Document.Web.unwrapRequest</div>
+<div class="tip" id="fs70">property HttpRequestMessage.Content: HttpContent</div>
+<div class="tip" id="fs71">HttpContent.ReadAsStringAsync() : Task&lt;string&gt;</div>
+<div class="tip" id="fs72">static member Async.AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;</div>
+<div class="tip" id="fs73">val wrapResponse : value:&#39;a -&gt; request:HttpRequestMessage -&gt; &#39;b<br /><br />Full name: Document.Web.wrapResponse</div>
+<div class="tip" id="fs74">val value : &#39;a</div>
+<div class="tip" id="fs75">val handle : request:HttpRequestMessage -&gt; Async&lt;&#39;a&gt;<br /><br />Full name: Document.App.handle</div>
+<div class="tip" id="fs76">Multiple items<br />module Web<br /><br />from Document<br /><br />--------------------<br />namespace System.Web</div>
+<div class="tip" id="fs77">val value&#39; : string</div>
+<div class="tip" id="fs78">module Domain<br /><br />from Document</div>
+<div class="tip" id="fs79">type Remove = obj<br /><br />Full name: Document.Remove</div>
+<div class="tip" id="fs80">val remove : index:&#39;a -&gt; Async&lt;unit option&gt;<br /><br />Full name: Document.remove</div>
+<div class="tip" id="fs81">val index : &#39;a</div>
+<div class="tip" id="fs82">val result : Choice&lt;obj,exn&gt;</div>
+<div class="tip" id="fs83">val cmd : Remove</div>
+<div class="tip" id="fs84">static member Async.Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;</div>
+<div class="tip" id="fs85">active recognizer Success: Choice&lt;&#39;a,&#39;b&gt; -&gt; Choice&lt;&#39;a,&#39;b&gt;<br /><br />Full name: Document.( |Success|Failure| )</div>
+<div class="tip" id="fs86">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs87">Multiple items<br />val Failure : message:string -&gt; exn<br /><br />Full name: Microsoft.FSharp.Core.Operators.Failure<br /><br />--------------------<br />active recognizer Failure: Choice&lt;&#39;a,&#39;b&gt; -&gt; Choice&lt;&#39;a,&#39;b&gt;<br /><br />Full name: Document.( |Success|Failure| )</div>
+<div class="tip" id="fs88">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs89">module Sample<br /><br />from Document</div>
+<div class="tip" id="fs90">val getHandler : request:HttpRequestMessage -&gt; Async&lt;&#39;a&gt;<br /><br />Full name: Document.Sample.getHandler</div>
+<div class="tip" id="fs91">val postHandler : request:HttpRequestMessage -&gt; Async&lt;&#39;a&gt;<br /><br />Full name: Document.Sample.postHandler</div>
+<div class="tip" id="fs92">type HttpStatusCode =<br />&#160;&#160;| Continue = 100<br />&#160;&#160;| SwitchingProtocols = 101<br />&#160;&#160;| OK = 200<br />&#160;&#160;| Created = 201<br />&#160;&#160;| Accepted = 202<br />&#160;&#160;| NonAuthoritativeInformation = 203<br />&#160;&#160;| NoContent = 204<br />&#160;&#160;| ResetContent = 205<br />&#160;&#160;| PartialContent = 206<br />&#160;&#160;| MultipleChoices = 300<br />&#160;&#160;...<br /><br />Full name: System.Net.HttpStatusCode</div>
+<div class="tip" id="fs93">field HttpStatusCode.Created = 201</div>
+<div class="tip" id="fs94">val sampleResource : obj<br /><br />Full name: Document.Sample.sampleResource</div>
+<div class="tip" id="fs95">val registerSample : config:&#39;a -&gt; &#39;b<br /><br />Full name: Document.Sample.registerSample</div>
+<div class="tip" id="fs96">val config : &#39;a</div>
 
         <!-- Any section element inside of this container is displayed as a slide -->
         <div class="slides">
@@ -487,7 +497,7 @@
     <span class="k">member</span> <span class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs42', 66)" onmouseover="showTip(event, 'fs42', 66)" class="i">GetTodos</span>() <span class="o">=</span>
         <span onmouseout="hideTip(event, 'fs26', 67)" onmouseover="showTip(event, 'fs26', 67)" class="i">async</span> {
             <span class="k">let!</span> <span class="i">todos</span> <span class="o">=</span> <span class="i">store</span><span class="o">.</span><span class="i">GetAll</span>()
-            <span class="k">let</span> <span class="i">todos&#39;</span> <span class="o">=</span>
+            <span class="k">let</span> <span class="i">todos&#39;</span><span class="o">:</span> <span class="i">TodoBackend</span><span class="o">.</span><span class="i">TodoStorage</span><span class="o">.</span><span class="i">Todo</span>[] <span class="o">=</span>
                 <span class="i">todos</span>
                 <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs43', 68)" onmouseover="showTip(event, 'fs43', 68)" class="i">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 69)" onmouseover="showTip(event, 'fs44', 69)" class="i">map</span> (<span class="k">fun</span> <span class="i">x</span> <span class="k">-&gt;</span>
                     <span class="k">let</span> <span class="i">baseUri</span> <span class="o">=</span> <span class="i">this</span><span class="o">.</span><span class="i">Request</span><span class="o">.</span><span class="i">RequestUri</span><span class="o">.</span><span class="i">AbsoluteUri</span>
@@ -537,12 +547,48 @@
 
 [&lt;<span class="i">RoutePrefix</span>(<span class="s">&quot;</span><span class="s">webapi</span><span class="s">&quot;</span>)&gt;]
 [&lt;<span class="i">Route</span>(<span class="s">&quot;</span><span class="s">&quot;</span>)&gt;]
-<span class="k">type</span> <span onmouseout="hideTip(event, 'fs41', 86)" onmouseover="showTip(event, 'fs41', 86)" class="i">TodosController</span>() <span class="o">=</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs52', 86)" onmouseover="showTip(event, 'fs52', 86)" class="i">TodoController</span>() <span class="o">=</span>
     <span class="k">inherit</span> <span class="i">ApiController</span>()
-    <span class="k">member</span> <span class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 87)" onmouseover="showTip(event, 'fs23', 87)" class="i">GetTodos</span>() <span class="o">=</span>
+    <span class="k">member</span> <span class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs53', 87)" onmouseover="showTip(event, 'fs53', 87)" class="i">GetTodos</span>() <span class="o">=</span>
         <span class="i">this</span><span class="o">.</span><span class="i">Request</span>
         <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs48', 88)" onmouseover="showTip(event, 'fs48', 88)" class="i">handler</span>
         <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs29', 89)" onmouseover="showTip(event, 'fs29', 89)" class="i">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs46', 90)" onmouseover="showTip(event, 'fs46', 90)" class="i">StartAsTask</span></pre>
+</td>
+</tr>
+</table>
+
+</section>
+
+<section >
+
+<h2>Aside: simplest application signature?</h2>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs54', 91)" onmouseover="showTip(event, 'fs54', 91)" class="i">SimplestFSharpApp</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs33', 92)" onmouseover="showTip(event, 'fs33', 92)" class="i">HttpRequestMessage</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs29', 93)" onmouseover="showTip(event, 'fs29', 93)" class="i">Async</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs34', 94)" onmouseover="showTip(event, 'fs34', 94)" class="i">HttpResponseMessage</span><span class="o">&gt;</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs55', 95)" onmouseover="showTip(event, 'fs55', 95)" class="i">StateTransitions</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs33', 96)" onmouseover="showTip(event, 'fs33', 96)" class="i">HttpRequestMessage</span> <span class="k">-&gt;</span>
+     (<span onmouseout="hideTip(event, 'fs33', 97)" onmouseover="showTip(event, 'fs33', 97)" class="i">HttpRequestMessage</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs29', 98)" onmouseover="showTip(event, 'fs29', 98)" class="i">Async</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="k">-&gt;</span>
+     (<span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs29', 99)" onmouseover="showTip(event, 'fs29', 99)" class="i">Async</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="k">-&gt;</span>
+     <span onmouseout="hideTip(event, 'fs29', 100)" onmouseover="showTip(event, 'fs29', 100)" class="i">Async</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs34', 101)" onmouseover="showTip(event, 'fs34', 101)" class="i">HttpResponseMessage</span><span class="o">&gt;</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs56', 102)" onmouseover="showTip(event, 'fs56', 102)" class="i">ExplicitTransitions</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs33', 103)" onmouseover="showTip(event, 'fs33', 103)" class="i">HttpRequestMessage</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs34', 104)" onmouseover="showTip(event, 'fs34', 104)" class="i">HttpResponseMessage</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs29', 105)" onmouseover="showTip(event, 'fs29', 105)" class="i">Async</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs34', 106)" onmouseover="showTip(event, 'fs34', 106)" class="i">HttpResponseMessage</span> <span class="o">*</span> <span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span></pre>
 </td>
 </tr>
 </table>
@@ -561,16 +607,18 @@
 <span class="l">5: </span>
 <span class="l">6: </span>
 <span class="l">7: </span>
+<span class="l">8: </span>
 </pre>
 </td>
 <td class="snippet"><pre class="fssnip">
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs52', 91)" onmouseover="showTip(event, 'fs52', 91)" class="i">mapTodos</span> (<span onmouseout="hideTip(event, 'fs53', 92)" onmouseover="showTip(event, 'fs53', 92)" class="i">todos</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs54', 93)" onmouseover="showTip(event, 'fs54', 93)" class="i">seq</span><span class="o">&lt;</span><span class="i">Todo</span><span class="o">&gt;</span>) <span class="o">=</span>
-    <span onmouseout="hideTip(event, 'fs53', 94)" onmouseover="showTip(event, 'fs53', 94)" class="i">todos</span>
-    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs43', 95)" onmouseover="showTip(event, 'fs43', 95)" class="i">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 96)" onmouseover="showTip(event, 'fs44', 96)" class="i">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs10', 97)" onmouseover="showTip(event, 'fs10', 97)" class="i">x</span> <span class="k">-&gt;</span>
-        { <span class="i">Url</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs45', 98)" onmouseover="showTip(event, 'fs45', 98)" class="i">Uri</span>(<span class="i">this</span><span class="o">.</span><span class="i">Request</span><span class="o">.</span><span class="i">RequestUri</span><span class="o">.</span><span class="i">AbsoluteUri</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs10', 99)" onmouseover="showTip(event, 'fs10', 99)" class="i">x</span><span class="o">.</span><span class="i">Id</span><span class="o">.</span><span class="i">ToString</span>())
-          <span class="i">Title</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 100)" onmouseover="showTip(event, 'fs10', 100)" class="i">x</span><span class="o">.</span><span class="i">Title</span>
-          <span class="i">Completed</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 101)" onmouseover="showTip(event, 'fs10', 101)" class="i">x</span><span class="o">.</span><span class="i">Completed</span>
-          <span class="i">Order</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 102)" onmouseover="showTip(event, 'fs10', 102)" class="i">x</span><span class="o">.</span><span class="i">Order</span> })</pre>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs57', 107)" onmouseover="showTip(event, 'fs57', 107)" class="i">mapTodos</span> (<span onmouseout="hideTip(event, 'fs49', 108)" onmouseover="showTip(event, 'fs49', 108)" class="i">request</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs33', 109)" onmouseover="showTip(event, 'fs33', 109)" class="i">HttpRequestMessage</span>) (<span onmouseout="hideTip(event, 'fs58', 110)" onmouseover="showTip(event, 'fs58', 110)" class="i">todos</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs59', 111)" onmouseover="showTip(event, 'fs59', 111)" class="i">seq</span><span class="o">&lt;</span><span class="i">NewTodo</span><span class="o">&gt;</span>) <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs58', 112)" onmouseover="showTip(event, 'fs58', 112)" class="i">todos</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs60', 113)" onmouseover="showTip(event, 'fs60', 113)" class="i">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs61', 114)" onmouseover="showTip(event, 'fs61', 114)" class="i">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs10', 115)" onmouseover="showTip(event, 'fs10', 115)" class="i">x</span> <span class="k">-&gt;</span>
+        { <span class="i">Url</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs45', 116)" onmouseover="showTip(event, 'fs45', 116)" class="i">Uri</span>(<span onmouseout="hideTip(event, 'fs49', 117)" onmouseover="showTip(event, 'fs49', 117)" class="i">request</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs62', 118)" onmouseover="showTip(event, 'fs62', 118)" class="i">RequestUri</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs63', 119)" onmouseover="showTip(event, 'fs63', 119)" class="i">AbsoluteUri</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs10', 120)" onmouseover="showTip(event, 'fs10', 120)" class="i">x</span><span class="o">.</span><span class="i">Id</span><span class="o">.</span><span class="i">ToString</span>())
+          <span class="i">Title</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 121)" onmouseover="showTip(event, 'fs10', 121)" class="i">x</span><span class="o">.</span><span class="i">Title</span>
+          <span class="i">Completed</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 122)" onmouseover="showTip(event, 'fs10', 122)" class="i">x</span><span class="o">.</span><span class="i">Completed</span>
+          <span class="i">Order</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 123)" onmouseover="showTip(event, 'fs10', 123)" class="i">x</span><span class="o">.</span><span class="i">Order</span> })
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs60', 124)" onmouseover="showTip(event, 'fs60', 124)" class="i">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs64', 125)" onmouseover="showTip(event, 'fs64', 125)" class="i">toArray</span></pre>
 </td>
 </tr>
 </table>
@@ -615,20 +663,20 @@
 </td>
 <td class="snippet"><pre class="fssnip">
 <span class="k">module</span> <span class="i">Domain</span> <span class="o">=</span>
-    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs55', 103)" onmouseover="showTip(event, 'fs55', 103)" class="i">domainLogic</span> (<span onmouseout="hideTip(event, 'fs56', 104)" onmouseover="showTip(event, 'fs56', 104)" class="i">value</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs57', 105)" onmouseover="showTip(event, 'fs57', 105)" class="i">string</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs56', 106)" onmouseover="showTip(event, 'fs56', 106)" class="i">value</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs58', 107)" onmouseover="showTip(event, 'fs58', 107)" class="i">ToUpper</span>()
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs65', 126)" onmouseover="showTip(event, 'fs65', 126)" class="i">domainLogic</span> (<span onmouseout="hideTip(event, 'fs66', 127)" onmouseover="showTip(event, 'fs66', 127)" class="i">value</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs67', 128)" onmouseover="showTip(event, 'fs67', 128)" class="i">string</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs66', 129)" onmouseover="showTip(event, 'fs66', 129)" class="i">value</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs68', 130)" onmouseover="showTip(event, 'fs68', 130)" class="i">ToUpper</span>()
 
-<span class="k">module</span> <span onmouseout="hideTip(event, 'fs7', 108)" onmouseover="showTip(event, 'fs7', 108)" class="i">Web</span> <span class="o">=</span>
-    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs59', 109)" onmouseover="showTip(event, 'fs59', 109)" class="i">unwrapRequest</span> (<span onmouseout="hideTip(event, 'fs49', 110)" onmouseover="showTip(event, 'fs49', 110)" class="i">request</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs33', 111)" onmouseover="showTip(event, 'fs33', 111)" class="i">HttpRequestMessage</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs26', 112)" onmouseover="showTip(event, 'fs26', 112)" class="i">async</span> {
-        <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs49', 113)" onmouseover="showTip(event, 'fs49', 113)" class="i">request</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs60', 114)" onmouseover="showTip(event, 'fs60', 114)" class="i">Content</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs61', 115)" onmouseover="showTip(event, 'fs61', 115)" class="i">ReadAsStringAsync</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs29', 116)" onmouseover="showTip(event, 'fs29', 116)" class="i">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs62', 117)" onmouseover="showTip(event, 'fs62', 117)" class="i">AwaitTask</span>
+<span class="k">module</span> <span onmouseout="hideTip(event, 'fs7', 131)" onmouseover="showTip(event, 'fs7', 131)" class="i">Web</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs69', 132)" onmouseover="showTip(event, 'fs69', 132)" class="i">unwrapRequest</span> (<span onmouseout="hideTip(event, 'fs49', 133)" onmouseover="showTip(event, 'fs49', 133)" class="i">request</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs33', 134)" onmouseover="showTip(event, 'fs33', 134)" class="i">HttpRequestMessage</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs26', 135)" onmouseover="showTip(event, 'fs26', 135)" class="i">async</span> {
+        <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs49', 136)" onmouseover="showTip(event, 'fs49', 136)" class="i">request</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs70', 137)" onmouseover="showTip(event, 'fs70', 137)" class="i">Content</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs71', 138)" onmouseover="showTip(event, 'fs71', 138)" class="i">ReadAsStringAsync</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs29', 139)" onmouseover="showTip(event, 'fs29', 139)" class="i">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs72', 140)" onmouseover="showTip(event, 'fs72', 140)" class="i">AwaitTask</span>
     }
-    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs63', 118)" onmouseover="showTip(event, 'fs63', 118)" class="i">wrapResponse</span> <span onmouseout="hideTip(event, 'fs64', 119)" onmouseover="showTip(event, 'fs64', 119)" class="i">value</span> (<span onmouseout="hideTip(event, 'fs49', 120)" onmouseover="showTip(event, 'fs49', 120)" class="i">request</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs33', 121)" onmouseover="showTip(event, 'fs33', 121)" class="i">HttpRequestMessage</span>) <span class="o">=</span>
-        <span onmouseout="hideTip(event, 'fs49', 122)" onmouseover="showTip(event, 'fs49', 122)" class="i">request</span><span class="o">.</span><span class="i">CreateResponse</span>(<span onmouseout="hideTip(event, 'fs64', 123)" onmouseover="showTip(event, 'fs64', 123)" class="i">value</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs73', 141)" onmouseover="showTip(event, 'fs73', 141)" class="i">wrapResponse</span> <span onmouseout="hideTip(event, 'fs74', 142)" onmouseover="showTip(event, 'fs74', 142)" class="i">value</span> (<span onmouseout="hideTip(event, 'fs49', 143)" onmouseover="showTip(event, 'fs49', 143)" class="i">request</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs33', 144)" onmouseover="showTip(event, 'fs33', 144)" class="i">HttpRequestMessage</span>) <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs49', 145)" onmouseover="showTip(event, 'fs49', 145)" class="i">request</span><span class="o">.</span><span class="i">CreateResponse</span>(<span onmouseout="hideTip(event, 'fs74', 146)" onmouseover="showTip(event, 'fs74', 146)" class="i">value</span>)
 
 <span class="k">module</span> <span class="i">App</span> <span class="o">=</span>
-    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs65', 124)" onmouseover="showTip(event, 'fs65', 124)" class="i">handle</span> <span onmouseout="hideTip(event, 'fs49', 125)" onmouseover="showTip(event, 'fs49', 125)" class="i">request</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs26', 126)" onmouseover="showTip(event, 'fs26', 126)" class="i">async</span> {
-        <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs56', 127)" onmouseover="showTip(event, 'fs56', 127)" class="i">value</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs66', 128)" onmouseover="showTip(event, 'fs66', 128)" class="i">Web</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs59', 129)" onmouseover="showTip(event, 'fs59', 129)" class="i">unwrapRequest</span> <span onmouseout="hideTip(event, 'fs49', 130)" onmouseover="showTip(event, 'fs49', 130)" class="i">request</span>
-        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs67', 131)" onmouseover="showTip(event, 'fs67', 131)" class="i">value&#39;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs68', 132)" onmouseover="showTip(event, 'fs68', 132)" class="i">Domain</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs55', 133)" onmouseover="showTip(event, 'fs55', 133)" class="i">domainLogic</span> <span onmouseout="hideTip(event, 'fs56', 134)" onmouseover="showTip(event, 'fs56', 134)" class="i">value</span>
-        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs66', 135)" onmouseover="showTip(event, 'fs66', 135)" class="i">Web</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs63', 136)" onmouseover="showTip(event, 'fs63', 136)" class="i">wrapResponse</span> <span onmouseout="hideTip(event, 'fs67', 137)" onmouseover="showTip(event, 'fs67', 137)" class="i">value&#39;</span> <span onmouseout="hideTip(event, 'fs49', 138)" onmouseover="showTip(event, 'fs49', 138)" class="i">request</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs75', 147)" onmouseover="showTip(event, 'fs75', 147)" class="i">handle</span> <span onmouseout="hideTip(event, 'fs49', 148)" onmouseover="showTip(event, 'fs49', 148)" class="i">request</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs26', 149)" onmouseover="showTip(event, 'fs26', 149)" class="i">async</span> {
+        <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs66', 150)" onmouseover="showTip(event, 'fs66', 150)" class="i">value</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs76', 151)" onmouseover="showTip(event, 'fs76', 151)" class="i">Web</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs69', 152)" onmouseover="showTip(event, 'fs69', 152)" class="i">unwrapRequest</span> <span onmouseout="hideTip(event, 'fs49', 153)" onmouseover="showTip(event, 'fs49', 153)" class="i">request</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs77', 154)" onmouseover="showTip(event, 'fs77', 154)" class="i">value&#39;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs78', 155)" onmouseover="showTip(event, 'fs78', 155)" class="i">Domain</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs65', 156)" onmouseover="showTip(event, 'fs65', 156)" class="i">domainLogic</span> <span onmouseout="hideTip(event, 'fs66', 157)" onmouseover="showTip(event, 'fs66', 157)" class="i">value</span>
+        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs76', 158)" onmouseover="showTip(event, 'fs76', 158)" class="i">Web</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs73', 159)" onmouseover="showTip(event, 'fs73', 159)" class="i">wrapResponse</span> <span onmouseout="hideTip(event, 'fs77', 160)" onmouseover="showTip(event, 'fs77', 160)" class="i">value&#39;</span> <span onmouseout="hideTip(event, 'fs49', 161)" onmouseover="showTip(event, 'fs49', 161)" class="i">request</span>
     }</pre>
 </td>
 </tr>
@@ -657,19 +705,19 @@
 </pre>
 </td>
 <td class="snippet"><pre class="fssnip">
-<span class="k">type</span> <span onmouseout="hideTip(event, 'fs69', 139)" onmouseover="showTip(event, 'fs69', 139)" class="i">Remove</span> <span class="o">=</span> <span class="i">SqlCommandProvider</span><span class="o">&lt;</span><span class="s">&quot;</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs79', 162)" onmouseover="showTip(event, 'fs79', 162)" class="i">Remove</span> <span class="o">=</span> <span class="i">SqlCommandProvider</span><span class="o">&lt;</span><span class="s">&quot;</span>
 <span class="s">    </span><span class="s">delete</span><span class="s"> </span><span class="s">from</span><span class="s"> </span><span class="s">Todo</span>
-<span class="s">    </span><span class="s">where</span><span class="s"> </span><span class="s">Id</span><span class="s"> </span><span class="s">=</span><span class="s"> </span><span class="s">@</span><span class="s">id</span><span class="s">&quot;</span>, <span onmouseout="hideTip(event, 'fs15', 140)" onmouseover="showTip(event, 'fs15', 140)" class="i">connectionString</span><span class="o">&gt;</span>
+<span class="s">    </span><span class="s">where</span><span class="s"> </span><span class="s">Id</span><span class="s"> </span><span class="s">=</span><span class="s"> </span><span class="s">@</span><span class="s">id</span><span class="s">&quot;</span>, <span onmouseout="hideTip(event, 'fs15', 163)" onmouseover="showTip(event, 'fs15', 163)" class="i">connectionString</span><span class="o">&gt;</span>
 
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs70', 141)" onmouseover="showTip(event, 'fs70', 141)" class="i">remove</span> <span onmouseout="hideTip(event, 'fs71', 142)" onmouseover="showTip(event, 'fs71', 142)" class="i">index</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs26', 143)" onmouseover="showTip(event, 'fs26', 143)" class="i">async</span> {
-    <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs72', 144)" onmouseover="showTip(event, 'fs72', 144)" class="i">result</span> <span class="o">=</span>
-        <span onmouseout="hideTip(event, 'fs26', 145)" onmouseover="showTip(event, 'fs26', 145)" class="i">async</span> {
-            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs73', 146)" onmouseover="showTip(event, 'fs73', 146)" class="i">cmd</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs69', 147)" onmouseover="showTip(event, 'fs69', 147)" class="i">Remove</span>()
-            <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs73', 148)" onmouseover="showTip(event, 'fs73', 148)" class="i">cmd</span><span class="o">.</span><span class="i">AsyncExecute</span>(<span onmouseout="hideTip(event, 'fs71', 149)" onmouseover="showTip(event, 'fs71', 149)" class="i">index</span>) }
-        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs29', 150)" onmouseover="showTip(event, 'fs29', 150)" class="i">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs74', 151)" onmouseover="showTip(event, 'fs74', 151)" class="i">Catch</span>
-    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs25', 152)" onmouseover="showTip(event, 'fs25', 152)" class="i">result</span> <span class="k">with</span>
-    | <span onmouseout="hideTip(event, 'fs75', 153)" onmouseover="showTip(event, 'fs75', 153)" class="i">Success</span> _ <span class="k">-&gt;</span> <span class="k">return</span> <span onmouseout="hideTip(event, 'fs76', 154)" onmouseover="showTip(event, 'fs76', 154)" class="i">Some</span>()
-    | <span onmouseout="hideTip(event, 'fs77', 155)" onmouseover="showTip(event, 'fs77', 155)" class="i">Failure</span> _ <span class="k">-&gt;</span> <span class="k">return</span> <span onmouseout="hideTip(event, 'fs78', 156)" onmouseover="showTip(event, 'fs78', 156)" class="i">None</span> }</pre>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs80', 164)" onmouseover="showTip(event, 'fs80', 164)" class="i">remove</span> <span onmouseout="hideTip(event, 'fs81', 165)" onmouseover="showTip(event, 'fs81', 165)" class="i">index</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs26', 166)" onmouseover="showTip(event, 'fs26', 166)" class="i">async</span> {
+    <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs82', 167)" onmouseover="showTip(event, 'fs82', 167)" class="i">result</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs26', 168)" onmouseover="showTip(event, 'fs26', 168)" class="i">async</span> {
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs83', 169)" onmouseover="showTip(event, 'fs83', 169)" class="i">cmd</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs79', 170)" onmouseover="showTip(event, 'fs79', 170)" class="i">Remove</span>()
+            <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs83', 171)" onmouseover="showTip(event, 'fs83', 171)" class="i">cmd</span><span class="o">.</span><span class="i">AsyncExecute</span>(<span onmouseout="hideTip(event, 'fs81', 172)" onmouseover="showTip(event, 'fs81', 172)" class="i">index</span>) }
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs29', 173)" onmouseover="showTip(event, 'fs29', 173)" class="i">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs84', 174)" onmouseover="showTip(event, 'fs84', 174)" class="i">Catch</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs25', 175)" onmouseover="showTip(event, 'fs25', 175)" class="i">result</span> <span class="k">with</span>
+    | <span onmouseout="hideTip(event, 'fs85', 176)" onmouseover="showTip(event, 'fs85', 176)" class="i">Success</span> _ <span class="k">-&gt;</span> <span class="k">return</span> <span onmouseout="hideTip(event, 'fs86', 177)" onmouseover="showTip(event, 'fs86', 177)" class="i">Some</span>()
+    | <span onmouseout="hideTip(event, 'fs87', 178)" onmouseover="showTip(event, 'fs87', 178)" class="i">Failure</span> _ <span class="k">-&gt;</span> <span class="k">return</span> <span onmouseout="hideTip(event, 'fs88', 179)" onmouseover="showTip(event, 'fs88', 179)" class="i">None</span> }</pre>
 </td>
 </tr>
 </table>
@@ -737,24 +785,24 @@
 </td>
 <td class="snippet"><pre class="fssnip">
 <span class="k">open</span> <span class="i">Frank</span>
-<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 157)" onmouseover="showTip(event, 'fs2', 157)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 158)" onmouseover="showTip(event, 'fs7', 158)" class="i">Web</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 159)" onmouseover="showTip(event, 'fs4', 159)" class="i">Http</span><span class="o">.</span><span class="i">HttpResource</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 180)" onmouseover="showTip(event, 'fs2', 180)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 181)" onmouseover="showTip(event, 'fs7', 181)" class="i">Web</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 182)" onmouseover="showTip(event, 'fs4', 182)" class="i">Http</span><span class="o">.</span><span class="i">HttpResource</span>
 
-<span class="k">module</span> <span onmouseout="hideTip(event, 'fs79', 160)" onmouseover="showTip(event, 'fs79', 160)" class="i">Sample</span> <span class="o">=</span>
-    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs80', 161)" onmouseover="showTip(event, 'fs80', 161)" class="i">getHandler</span> (<span onmouseout="hideTip(event, 'fs49', 162)" onmouseover="showTip(event, 'fs49', 162)" class="i">request</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs33', 163)" onmouseover="showTip(event, 'fs33', 163)" class="i">HttpRequestMessage</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs26', 164)" onmouseover="showTip(event, 'fs26', 164)" class="i">async</span> {
-        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs49', 165)" onmouseover="showTip(event, 'fs49', 165)" class="i">request</span><span class="o">.</span><span class="i">CreateResponse</span>()
+<span class="k">module</span> <span onmouseout="hideTip(event, 'fs89', 183)" onmouseover="showTip(event, 'fs89', 183)" class="i">Sample</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs90', 184)" onmouseover="showTip(event, 'fs90', 184)" class="i">getHandler</span> (<span onmouseout="hideTip(event, 'fs49', 185)" onmouseover="showTip(event, 'fs49', 185)" class="i">request</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs33', 186)" onmouseover="showTip(event, 'fs33', 186)" class="i">HttpRequestMessage</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs26', 187)" onmouseover="showTip(event, 'fs26', 187)" class="i">async</span> {
+        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs49', 188)" onmouseover="showTip(event, 'fs49', 188)" class="i">request</span><span class="o">.</span><span class="i">CreateResponse</span>()
     }
-    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs81', 166)" onmouseover="showTip(event, 'fs81', 166)" class="i">postHandler</span> (<span onmouseout="hideTip(event, 'fs49', 167)" onmouseover="showTip(event, 'fs49', 167)" class="i">request</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs33', 168)" onmouseover="showTip(event, 'fs33', 168)" class="i">HttpRequestMessage</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs26', 169)" onmouseover="showTip(event, 'fs26', 169)" class="i">async</span> {
-        <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs56', 170)" onmouseover="showTip(event, 'fs56', 170)" class="i">value</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs49', 171)" onmouseover="showTip(event, 'fs49', 171)" class="i">request</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs60', 172)" onmouseover="showTip(event, 'fs60', 172)" class="i">Content</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs61', 173)" onmouseover="showTip(event, 'fs61', 173)" class="i">ReadAsStringAsync</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs29', 174)" onmouseover="showTip(event, 'fs29', 174)" class="i">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs62', 175)" onmouseover="showTip(event, 'fs62', 175)" class="i">AwaitTask</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs91', 189)" onmouseover="showTip(event, 'fs91', 189)" class="i">postHandler</span> (<span onmouseout="hideTip(event, 'fs49', 190)" onmouseover="showTip(event, 'fs49', 190)" class="i">request</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs33', 191)" onmouseover="showTip(event, 'fs33', 191)" class="i">HttpRequestMessage</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs26', 192)" onmouseover="showTip(event, 'fs26', 192)" class="i">async</span> {
+        <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs66', 193)" onmouseover="showTip(event, 'fs66', 193)" class="i">value</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs49', 194)" onmouseover="showTip(event, 'fs49', 194)" class="i">request</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs70', 195)" onmouseover="showTip(event, 'fs70', 195)" class="i">Content</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs71', 196)" onmouseover="showTip(event, 'fs71', 196)" class="i">ReadAsStringAsync</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs29', 197)" onmouseover="showTip(event, 'fs29', 197)" class="i">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs72', 198)" onmouseover="showTip(event, 'fs72', 198)" class="i">AwaitTask</span>
         <span class="c">// Do something with value</span>
-        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs49', 176)" onmouseover="showTip(event, 'fs49', 176)" class="i">request</span><span class="o">.</span><span class="i">CreateResponse</span>(<span onmouseout="hideTip(event, 'fs82', 177)" onmouseover="showTip(event, 'fs82', 177)" class="i">HttpStatusCode</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs83', 178)" onmouseover="showTip(event, 'fs83', 178)" class="i">Created</span>, <span onmouseout="hideTip(event, 'fs56', 179)" onmouseover="showTip(event, 'fs56', 179)" class="i">value</span>)
+        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs49', 199)" onmouseover="showTip(event, 'fs49', 199)" class="i">request</span><span class="o">.</span><span class="i">CreateResponse</span>(<span onmouseout="hideTip(event, 'fs92', 200)" onmouseover="showTip(event, 'fs92', 200)" class="i">HttpStatusCode</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs93', 201)" onmouseover="showTip(event, 'fs93', 201)" class="i">Created</span>, <span onmouseout="hideTip(event, 'fs66', 202)" onmouseover="showTip(event, 'fs66', 202)" class="i">value</span>)
     }
 
-    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs84', 180)" onmouseover="showTip(event, 'fs84', 180)" class="i">sampleResource</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs94', 203)" onmouseover="showTip(event, 'fs94', 203)" class="i">sampleResource</span> <span class="o">=</span>
         <span class="i">routeResource</span> <span class="s">&quot;</span><span class="s">/</span><span class="s">api</span><span class="s">/</span><span class="s">sample</span><span class="s">&quot;</span>
-                    [ <span class="i">get</span> <span onmouseout="hideTip(event, 'fs80', 181)" onmouseover="showTip(event, 'fs80', 181)" class="i">getHandler</span>
-                      <span class="i">post</span> <span onmouseout="hideTip(event, 'fs81', 182)" onmouseover="showTip(event, 'fs81', 182)" class="i">postHandler</span> ]
+                    [ <span class="i">get</span> <span onmouseout="hideTip(event, 'fs90', 204)" onmouseover="showTip(event, 'fs90', 204)" class="i">getHandler</span>
+                      <span class="i">post</span> <span onmouseout="hideTip(event, 'fs91', 205)" onmouseover="showTip(event, 'fs91', 205)" class="i">postHandler</span> ]
     
-    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs85', 183)" onmouseover="showTip(event, 'fs85', 183)" class="i">registerSample</span> <span onmouseout="hideTip(event, 'fs86', 184)" onmouseover="showTip(event, 'fs86', 184)" class="i">config</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs86', 185)" onmouseover="showTip(event, 'fs86', 185)" class="i">config</span> <span class="o">|&gt;</span> <span class="i">register</span> [<span onmouseout="hideTip(event, 'fs84', 186)" onmouseover="showTip(event, 'fs84', 186)" class="i">sampleResource</span>]</pre>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs95', 206)" onmouseover="showTip(event, 'fs95', 206)" class="i">registerSample</span> <span onmouseout="hideTip(event, 'fs96', 207)" onmouseover="showTip(event, 'fs96', 207)" class="i">config</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs96', 208)" onmouseover="showTip(event, 'fs96', 208)" class="i">config</span> <span class="o">|&gt;</span> <span class="i">register</span> [<span onmouseout="hideTip(event, 'fs94', 209)" onmouseover="showTip(event, 'fs94', 209)" class="i">sampleResource</span>]</pre>
 </td>
 </tr>
 </table>
