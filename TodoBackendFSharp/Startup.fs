@@ -18,6 +18,8 @@
 namespace TodoBackend
 
 open System
+open System.Diagnostics.Contracts
+open System.Threading
 open System.Threading.Tasks
 open Owin
 open Microsoft.Owin
@@ -55,6 +57,7 @@ module Implementations =
         | Some app -> app env
         | None -> Owin.notFound env |> Async.StartAsTask :> Task
 
+
 (*
 Microsoft's Katana components make use of a `Startup` class with a single member conventionally named
 `Configuration`. `Configuration` takes an `IAppBuilder` into which you mount middleware components.
@@ -69,17 +72,33 @@ and then into the `Cors.middleware`. By doing this, Katana will pass all request
 /// Todo-backend startup used by Katana.
 [<Sealed>]
 type Startup() =
+    // Converted from http://aspnetwebstack.codeplex.com/SourceControl/latest#src/System.Web.Http.Owin/WebApiAppBuilderExtensions.cs
+    let getOnAppDisposingProperty (builder: Owin.IAppBuilder) =
+        Contract.Assert(builder <> Unchecked.defaultof<_>)
+
+        let properties = builder.Properties
+        if properties = Unchecked.defaultof<_> then CancellationToken.None else
+
+        let success, value = properties.TryGetValue("host.OnAppDisposing")
+        if success then 
+            let token = value :?> Nullable<CancellationToken>
+            if token.HasValue then
+                token.Value
+            else CancellationToken.None
+        else CancellationToken.None
         
     /// Configures the Katana `IAppBuilder` to run the todo-backend application and
     /// add the Link header. The `Cors.middleware` wraps every request and will respond
     /// immediately to CORS preflight requests.
     member __.Configuration(builder: IAppBuilder) =
+        let token = getOnAppDisposingProperty builder
+
         // Wire up middleware
         builder.Use(fun _ ->
             Implementations.choose (function
             | "owin"   -> Some Owin.app
-            | "webapi" -> Some WebApi.app
-            | "frank"  -> Some(Frank.app "frank")
+            | "webapi" -> Some(WebApi.app token)
+            | "frank"  -> Some(Frank.app "frank" token)
             | _ -> None)
             |> Link.middleware
             |> Cors.middleware)

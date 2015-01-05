@@ -18,8 +18,10 @@
 namespace TodoBackend
 
 open System
+open System.Diagnostics.Contracts
 open System.Net
 open System.Net.Http
+open System.Threading
 open System.Threading.Tasks
 open System.Web.Http
 open Newtonsoft.Json
@@ -136,17 +138,61 @@ type internal AsyncCallableHandler (handler) =
         base.SendAsync(request, cancellationToken)
 
 module WebApi =
+    // TODO: Move this into Frank
+    // Converted from http://aspnetwebstack.codeplex.com/SourceControl/latest#src/System.Web.Http.Owin/WebApiAppBuilderExtensions.cs
+    let createOptions (server, configuration: HttpConfiguration, token) =
+        Contract.Assert(server <> Unchecked.defaultof<_>)
+        Contract.Assert(configuration <> Unchecked.defaultof<_>)
+        Contract.Assert(token <> Unchecked.defaultof<_>)
+
+        let services = configuration.Services
+        Contract.Assert(services <> Unchecked.defaultof<_>)
+
+        let bufferPolicySelector =
+            let temp = services.GetHostBufferPolicySelector()
+            if temp = Unchecked.defaultof<_> then
+                new System.Web.Http.Owin.OwinBufferPolicySelector() :> Hosting.IHostBufferPolicySelector
+            else temp
+        let exceptionLogger = System.Web.Http.ExceptionHandling.ExceptionServices.GetLogger(services)
+        let exceptionHandler = System.Web.Http.ExceptionHandling.ExceptionServices.GetHandler(services)
+
+        new System.Web.Http.Owin.HttpMessageHandlerOptions(
+            MessageHandler = server,
+            BufferPolicySelector = bufferPolicySelector,
+            ExceptionLogger = exceptionLogger,
+            ExceptionHandler = exceptionHandler,
+            AppDisposing = token)
+
+    // TODO: Move this into Frank
+    /// See https://katanaproject.codeplex.com/SourceControl/latest#src/Microsoft.Owin/Infrastructure/AppFuncTransition.cs
+    [<Sealed>]
+    type AppFuncTransition(next: Dyfrig.OwinAppFunc) =
+        inherit Microsoft.Owin.OwinMiddleware(null)
+        default x.Invoke(context: Microsoft.Owin.IOwinContext) =
+            // TODO: check for null
+            next.Invoke(context.Environment)
+     
+    // TODO: Move this into Frank
+    /// Explicit wrapper for HttpMessageHandlerAdapter
+    type OwinMessageHandlerMiddleware(next: Dyfrig.OwinAppFunc, options) =
+        let nextKatana = AppFuncTransition(next) :> Microsoft.Owin.OwinMiddleware
+        let webApiKatana = new System.Web.Http.Owin.HttpMessageHandlerAdapter(nextKatana, options)
+        member x.Invoke(environment: Dyfrig.OwinEnv) =
+            // TODO: check for null
+            let context = new Microsoft.Owin.OwinContext(environment)
+            webApiKatana.Invoke(context) 
+
     let register (config: HttpConfiguration) =
         config.MapHttpAttributeRoutes()
         let serializerSettings = config.Formatters.JsonFormatter.SerializerSettings
         serializerSettings.ContractResolver <- Serialization.CamelCasePropertyNamesContractResolver()
         serializerSettings.Converters.Add(OptionConverter())
 
-    let app : Dyfrig.OwinEnv -> Task =
+    let app token : Dyfrig.OwinEnv -> Task =
         let config = new HttpConfiguration()
         register config
         let server = new HttpServer(config)
         // TODO: Map exception handling to OWIN exception handling.
-        let handler = new AsyncCallableHandler(server)
-        let cts = new System.Threading.CancellationTokenSource()
-        Dyfrig.SystemNetHttpAdapter.fromSystemNetHttp(fun request -> handler.CallSendAsync(request, cts.Token)).Invoke
+        let options = createOptions(server, config, token)
+        let adapter = new OwinMessageHandlerMiddleware(Unchecked.defaultof<_>, options)
+        adapter.Invoke

@@ -127,11 +127,11 @@ let register basePath (config: HttpConfiguration) =
     serializerSettings.ContractResolver <- Serialization.CamelCasePropertyNamesContractResolver()
     serializerSettings.Converters.Add(OptionConverter())
 
-let app basePath : Dyfrig.OwinEnv -> Task =
+let app basePath token : Dyfrig.OwinEnv -> Task =
     let config = new HttpConfiguration()
     register basePath config
     let server = new HttpServer(config)
     // TODO: Map exception handling to OWIN exception handling.
-    let handler = new AsyncCallableHandler(server)
-    let cts = new System.Threading.CancellationTokenSource()
-    Dyfrig.SystemNetHttpAdapter.fromSystemNetHttp(fun request -> handler.CallSendAsync(request, cts.Token)).Invoke
+    let options = WebApi.createOptions(server, config, token)
+    let adapter = new WebApi.OwinMessageHandlerMiddleware(Unchecked.defaultof<_>, options)
+    adapter.Invoke
