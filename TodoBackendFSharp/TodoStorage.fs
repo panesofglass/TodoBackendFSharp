@@ -194,10 +194,10 @@ module Sql =
                 match result with
                 | Some todo ->
                     let update =
-                        Get.Record(id = todo.Id,
-                                   title = defaultArg patch.Title todo.Title,
-                                   completed = defaultArg patch.Completed todo.Completed,
-                                   order = defaultArg patch.Order todo.Order)
+                        Get.Record(Id = todo.Id,
+                                   Title = defaultArg patch.Title todo.Title,
+                                   Completed = defaultArg patch.Completed todo.Completed,
+                                   Order = defaultArg patch.Order todo.Order)
                     use cmd = new Update(connectionString.Value)
                     let! _ = cmd.AsyncExecute(update.Title, update.Completed, update.Order, update.Id)
                     return Some { Id = update.Id; Title = update.Title; Completed = update.Completed; Order = update.Order }

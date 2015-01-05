@@ -144,7 +144,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Data.SqlClient">
-      <HintPath>..\packages\FSharp.Data.SqlClient.1.3.3\lib\net40\FSharp.Data.SqlClient.dll</HintPath>
+      <HintPath>..\packages\FSharp.Data.SqlClient.1.5.6\lib\net40\FSharp.Data.SqlClient.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="FSharpx.Core">
       <HintPath>..\packages\FSharpx.Core.1.8.41\lib\40\FSharpx.Core.dll</HintPath>
@@ -160,18 +161,6 @@
     <Reference Include="Microsoft.Owin.Host.SystemWeb">
       <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.SqlServer.ConnectionInfo">
-      <HintPath>..\packages\FSharp.Data.SqlClient.1.3.3\lib\net40\Microsoft.SqlServer.ConnectionInfo.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.SqlServer.Management.Sdk.Sfc">
-      <HintPath>..\packages\FSharp.Data.SqlClient.1.3.3\lib\net40\Microsoft.SqlServer.Management.Sdk.Sfc.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.SqlServer.Smo">
-      <HintPath>..\packages\FSharp.Data.SqlClient.1.3.3\lib\net40\Microsoft.SqlServer.Smo.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.SqlServer.Types">
-      <HintPath>..\packages\FSharp.Data.SqlClient.1.3.3\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -209,5 +198,6 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
 </Project>

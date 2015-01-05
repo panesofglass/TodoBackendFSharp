@@ -11,7 +11,7 @@
 
 (*** hide ***)
 #r "System.Configuration.dll"
-#I "../packages/FSharp.Data.SqlClient.1.3.3/lib/net40"
+#I "../packages/FSharp.Data.SqlClient.1.5.6/lib/net40"
 #r "Microsoft.SqlServer.Types.dll"
 #r "FSharp.Data.SqlClient.dll"
 
@@ -210,7 +210,7 @@ let result =
         return! cmd.AsyncExecute(id = 1) }
     |> Async.RunSynchronously
 
-let todo = GetTodo.Record(0, "New todo", false, 1)
+let todo = GetTodo.Record(Id = 0, Title = "New todo", Completed = false, Order = 1)
 
 (**
 
