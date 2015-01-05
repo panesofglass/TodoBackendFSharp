@@ -48,6 +48,9 @@ let connString = lazy AppDomain.CurrentDomain.GetData(key)
 #load "../TodoBackendFSharp/OptionConverter.fs"
 #load "../TodoBackendFSharp/TodoStorage.fs"
 
+open TodoBackend
+open TodoBackend.TodoStorage
+
 (**
 
 # F# on the Web
@@ -279,7 +282,7 @@ type TodosController() =
     member this.GetTodos() =
         async {
             let! todos = store.GetAll()
-            let todos' =
+            let todos': TodoBackend.TodoStorage.Todo[] =
                 todos
                 |> Array.map (fun x ->
                     let baseUri = this.Request.RequestUri.AbsoluteUri
@@ -308,7 +311,7 @@ let handler (request: HttpRequestMessage) = async {
 
 [<RoutePrefix("webapi")>]
 [<Route("")>]
-type TodosController() =
+type TodoController() =
     inherit ApiController()
     member this.GetTodos() =
         this.Request
@@ -319,17 +322,38 @@ type TodosController() =
 
 ***
 
+## Aside: simplest application signature?
+
+*)
+
+type SimplestFSharpApp =
+    HttpRequestMessage -> Async<HttpResponseMessage>
+
+type StateTransitions<'T> =
+    HttpRequestMessage ->
+     (HttpRequestMessage -> Async<'T>) ->
+     ('T -> Async<'T>) ->
+     Async<HttpResponseMessage>
+
+type ExplicitTransitions<'T> =
+    HttpRequestMessage -> HttpResponseMessage -> Async<'T -> HttpResponseMessage * 'T>
+
+(**
+
+***
+
 ## Extract the domain function
 
 *)
 
-let mapTodos (todos: seq<Todo>) =
+let mapTodos (request: HttpRequestMessage) (todos: seq<NewTodo>) =
     todos
-    |> Array.map (fun x ->
-        { Url = Uri(this.Request.RequestUri.AbsoluteUri + x.Id.ToString())
+    |> Seq.map (fun x ->
+        { Url = Uri(request.RequestUri.AbsoluteUri + x.Id.ToString())
           Title = x.Title
           Completed = x.Completed
           Order = x.Order })
+    |> Seq.toArray
 
 (**
 

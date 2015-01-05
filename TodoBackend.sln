@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{72A8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{91A5A85E-B13D-4BFE-A46D-ED1B00BCEE2F}"
 	ProjectSection(SolutionItems) = preProject
+		app.config = app.config
 		docs\generate.fsx = docs\generate.fsx
 		docs\index.md = docs\index.md
 		docs\slides.fsx = docs\slides.fsx
