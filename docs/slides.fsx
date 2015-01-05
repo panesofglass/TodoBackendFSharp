@@ -24,7 +24,7 @@
 #r "../packages/Microsoft.Owin.Cors.3.0.0/lib/net45/Microsoft.Owin.Cors.dll"
 #r "../packages/Newtonsoft.Json.6.0.4/lib/net40/Newtonsoft.Json.dll"
 #r "../packages/Owin.1.0/lib/net40/owin.dll"
-#r "../packages/Frank.3.0.0.9/lib/net45/Frank.dll"
+#r "../packages/Frank.3.1.1/lib/net45/Frank.dll"
 
 open Owin
 open Microsoft.Owin
