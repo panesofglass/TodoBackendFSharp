@@ -16,7 +16,7 @@
 #r "FSharp.Data.SqlClient.dll"
 
 #r "System.Net.Http.dll"
-#r "../packages/Microsoft.AspNet.Cors.5.0.0/lib/net45/System.Web.Cors.dll"
+#r "../packages/Microsoft.AspNet.Cors.5.2.2/lib/net45/System.Web.Cors.dll"
 #r "../packages/Microsoft.AspNet.WebApi.Client.5.2.2/lib/net45/System.Net.Http.Formatting.dll"
 #r "../packages/Microsoft.AspNet.WebApi.Core.5.2.2/lib/net45/System.Web.Http.dll"
 #r "../packages/Microsoft.AspNet.WebApi.Owin.5.2.2/lib/net45/System.Web.Http.Owin.dll"
