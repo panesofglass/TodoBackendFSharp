@@ -10,25 +10,29 @@
 *)
 
 (*** hide ***)
+#I "../packages"
+
 #r "System.Configuration.dll"
+#r "System.Net.Http.dll"
+
 #I "../packages/FSharp.Data.SqlClient.1.5.6/lib/net40"
 #r "Microsoft.SqlServer.Types.dll"
 #r "FSharp.Data.SqlClient.dll"
 
-#r "System.Net.Http.dll"
-#r "../packages/Microsoft.AspNet.Cors.5.2.2/lib/net45/System.Web.Cors.dll"
-#r "../packages/Microsoft.AspNet.WebApi.Client.5.2.2/lib/net45/System.Net.Http.Formatting.dll"
-#r "../packages/Microsoft.AspNet.WebApi.Core.5.2.2/lib/net45/System.Web.Http.dll"
-#r "../packages/Microsoft.AspNet.WebApi.Owin.5.2.2/lib/net45/System.Web.Http.Owin.dll"
-#r "../packages/Microsoft.Owin.3.0.0/lib/net45/Microsoft.Owin.dll"
-#r "../packages/Microsoft.Owin.Cors.3.0.0/lib/net45/Microsoft.Owin.Cors.dll"
-#r "../packages/Newtonsoft.Json.6.0.4/lib/net40/Newtonsoft.Json.dll"
-#r "../packages/Owin.1.0/lib/net40/owin.dll"
-#r "../packages/Frank.3.1.1/lib/net45/Frank.dll"
+#r "Microsoft.AspNet.Cors.5.2.2/lib/net45/System.Web.Cors.dll"
+#r "Microsoft.AspNet.WebApi.Client.5.2.2/lib/net45/System.Net.Http.Formatting.dll"
+#r "Microsoft.AspNet.WebApi.Core.5.2.2/lib/net45/System.Web.Http.dll"
+#r "Microsoft.AspNet.WebApi.Owin.5.2.2/lib/net45/System.Web.Http.Owin.dll"
+#r "Microsoft.Owin.3.0.0/lib/net45/Microsoft.Owin.dll"
+#r "Microsoft.Owin.Cors.3.0.0/lib/net45/Microsoft.Owin.Cors.dll"
+#r "Newtonsoft.Json.6.0.4/lib/net40/Newtonsoft.Json.dll"
+#r "Owin.1.0/lib/net40/owin.dll"
+#r "Frank.3.1.1/lib/net45/Frank.dll"
 
 open Owin
 open Microsoft.Owin
 open System
+open System.Collections.Generic
 open System.Net
 open System.Net.Http
 open System.Threading
@@ -63,7 +67,7 @@ open TodoBackend.TodoStorage
 
 <img src="images/tachyus.png" alt="Tachyus logo" style="background-color: #fff; display: block; margin: 10px auto;" />
 
-- Lead [Community for F#](http://c4fsharp.net/)
+- [Community for F#](http://c4fsharp.net/) Founder
 - Microsoft Visual F# MVP
 - ASPInsider
 - [OWIN](http://owin.org/) Management Committee
@@ -82,28 +86,52 @@ open TodoBackend.TodoStorage
 
 ***
 
-# Tachyus Software
+# Tachyus
+### Est. 2014
+
+* Measure
+* Analyze
+* Produce
 
 ***
 
-## ASP.NET Web API via Azure Web Sites
+## Starting Point
+
+* No team
+* First client's existing systems:
+  * PHP-based web app for reporting
+  * Paper/pencil data collection from oil fields
 
 ***
 
-## AngularJS SPA for back office
-
-(Straight JavaScript; not currently using F# -> JavaScript compilation)
+## Twelve Weeks Later ...
 
 ***
 
-## iOS data collection for field
+## Modular SPA
+### D3 + Kendo UI
+
+* Monitoring
+* Reporting
+* Data Correction
+* Administration
 
 ***
 
-## Replaced Existing Systems:
+## Mobile
+### F# + Xamarin
 
-* PHP-based web app for reporting
-* Manual data collection from oil fields
+* Data collection
+* Synchronization
+
+***
+
+## Web APIs
+### F# + OWIN + ASP.NET Web API
+
+* Mobile sync API
+* Calculation engines for reports and monitoring
+* Domain to Web API mapping **_<- our focus_**
 
 ***
 
@@ -113,28 +141,24 @@ open TodoBackend.TodoStorage
 
 ***
 
-## CEO Initially Skeptical
+## Initially Skeptical
 
 ***
 
-## CTO Created Prototype
+## Prototyping
 
 ***
 
-## CEO Convinced
+## Talent Pool Assessment
+
+***
+
+## Why We Chose F#
+### People
 
 * Solved a talent problem
 * Attract really good people
-* Fit for data analysis
-
-***
-
-## CTO Convinced
-
-* Domain-focused programming
-* Math / science-focused solution
-* Full .NET compatibility
-* Cross-platform
+* Good fit for data analysts
 
 ***
 
@@ -146,6 +170,16 @@ open TodoBackend.TodoStorage
     <cite>Dakin Sloss, Tachyus Founder &amp; CEO</cite>
   </footer>
 </blockquote>
+
+***
+
+## Why We Chose F#
+### Technical
+
+* Domain-focused programming
+* Math / science-focused solution
+* Full .NET compatibility
+* Cross-platform
 
 ***
 
@@ -172,7 +206,7 @@ open TodoBackend.TodoStorage
 # Project:
 ## Todo Backend
 
-http://todo-backend.thepete.net/
+http://todobackend.com/
 
 ***
 
@@ -234,8 +268,27 @@ let todo = GetTodo.Record(Id = 0, Title = "New todo", Completed = false, Order =
 
 *)
 
-type SimplestHttpApp =
-    HttpRequestMessage -> HttpResponseMessage
+type Req = HttpRequestMessage
+type Res = HttpResponseMessage
+
+type SimplestHttpApp = Req -> Res
+
+type SimplestWebApiApp = Req -> Task<Res>
+
+type SimplestFSharpApp = Req -> Async<Res>
+
+(**
+
+***
+
+## What About Resource State?
+
+*)
+
+type ``Simplest?`` = Req -> Async<Res>
+
+type StateTransitions<'T> =
+    Req -> (Req -> Async<'T>) -> ('T -> Async<'T>) -> Async<Res>
 
 (**
 
@@ -253,6 +306,7 @@ Add the following NuGet packages:
 ***
 
 ## Configure
+### Startup.fs
 
 *)
 
@@ -282,7 +336,7 @@ type TodosController() =
     member this.GetTodos() =
         async {
             let! todos = Sql.store.GetAll()
-            let todos': TodoBackend.TodoStorage.Todo[] =
+            let todos' =
                 todos
                 |> Array.map (fun x ->
                     let baseUri = this.Request.RequestUri.AbsoluteUri
@@ -297,63 +351,31 @@ type TodosController() =
 
 ***
 
+# Modularize for Composition
+
+***
+
 ## Extract the handler function
 
 *)
 
-type SimplestFSharpHttpApp =
-    HttpRequestMessage -> Async<HttpResponseMessage>
-
-let handler (request: HttpRequestMessage) = async {
+let handle (request: Req) = async {
     let! todos = Sql.store.GetAll()
-    let todos' = todos // Do stuff
+    let todos' =
+        todos
+        |> Array.map (fun x ->
+            let baseUri = request.RequestUri.AbsoluteUri
+            { Url = Uri(baseUri + x.Id.ToString())
+              Title = x.Title
+              Completed = x.Completed
+              Order = x.Order })
     return request.CreateResponse(todos') }
 
-[<RoutePrefix("webapi")>]
-[<Route("")>]
+[<Route("webapi")>]
 type TodoController() =
     inherit ApiController()
-    member this.GetTodos() =
-        this.Request
-        |> handler
-        |> Async.StartAsTask
-
-(**
-
-***
-
-## Aside: simplest application signature?
-
-*)
-
-type SimplestFSharpApp =
-    HttpRequestMessage -> Async<HttpResponseMessage>
-
-type StateTransitions<'T> =
-    HttpRequestMessage ->
-     (HttpRequestMessage -> Async<'T>) ->
-     ('T -> Async<'T>) ->
-     Async<HttpResponseMessage>
-
-type ExplicitTransitions<'T> =
-    HttpRequestMessage -> HttpResponseMessage -> Async<'T -> HttpResponseMessage * 'T>
-
-(**
-
-***
-
-## Extract the domain function
-
-*)
-
-let mapTodos (request: HttpRequestMessage) (todos: seq<NewTodo>) =
-    todos
-    |> Seq.map (fun x ->
-        { Url = Uri(request.RequestUri.AbsoluteUri + x.Id.ToString())
-          Title = x.Title
-          Completed = x.Completed
-          Order = x.Order })
-    |> Seq.toArray
+    member this.GetTodos(request) =
+        handle request |> Async.StartAsTask
 
 (**
 
@@ -370,7 +392,54 @@ let mapTodos (request: HttpRequestMessage) (todos: seq<NewTodo>) =
 
 ***
 
-## Map Domain into the Web
+## Extract the Request Mapping Function
+
+*)
+
+let getResource (request: Req) = async {
+    let! todos = Sql.store.GetAll()
+    return request, todos }
+
+(**
+
+***
+
+## Extract the Domain Function
+
+*)
+
+let mapValues (request: Req, todos: NewTodo[]) =
+    let todos' =
+        todos
+        |> Array.map (fun x ->
+            { Url = Uri(request.RequestUri.AbsoluteUri + x.Id.ToString())
+              Title = x.Title
+              Completed = x.Completed
+              Order = x.Order })
+        |> Seq.toArray
+    request, todos'
+
+(**
+
+***
+
+## Compose
+
+*)
+
+let makeHandler map1 map2 request =
+    async {
+        let! res = map1 request
+        let (req: Req, values) = map2 res
+        return req.CreateResponse(values) }
+
+let handler request = makeHandler getResource mapValues request
+
+(**
+
+***
+
+## Map Domain onto the Web
 
 *)
 
@@ -378,58 +447,18 @@ module Domain =
     let domainLogic (value: string) = value.ToUpper()
 
 module Web =
-    let unwrapRequest (request: HttpRequestMessage) = async {
-        return! request.Content.ReadAsStringAsync() |> Async.AwaitTask
-    }
-    let wrapResponse value (request: HttpRequestMessage) =
-        request.CreateResponse(value)
+    let unwrapRequest (request: Req) =
+        async { return! request.Content.ReadAsStringAsync() |> Async.AwaitTask }
+
+    let wrapResponse value (request: Req) = request.CreateResponse(value)
 
 module App =
-    let handle request = async {
-        let! value = Web.unwrapRequest request
-        let value' = Domain.domainLogic value
-        return Web.wrapResponse value' request
-    }
-
-(**
-
-***
-
-## Handling Domain Exceptions
-
-*)
-
-type Remove = SqlCommandProvider<"
-    delete from Todo
-    where Id = @id", connectionString>
-
-let remove index = async {
-    let! result =
+    let handle request =
         async {
-            let cmd = new Remove()
-            return! cmd.AsyncExecute(index) }
-        |> Async.Catch
-    match result with
-    | Success _ -> return Some()
-    | Failure _ -> return None }
-
+            let! value = Web.unwrapRequest request
+            let value' = Domain.domainLogic value
+            return Web.wrapResponse value' request }
 (**
-
-***
-
-## [Railway-Oriented Programming](http://fsharpforfunandprofit.com/posts/recipe-part2/)
-
-<iframe src="https://player.vimeo.com/video/97344498" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="http://vimeo.com/97344498">Scott Wlaschin - Railway Oriented Programming -- error handling in functional languages</a> from <a href="http://vimeo.com/ndcoslo">NDC Conferences</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
-
-***
-
-## [Domain Modeling](http://www.slideshare.net/ScottWlaschin/ddd-with-fsharptypesystemlondonndc2013)
-
-<iframe src="https://player.vimeo.com/video/97507575" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="http://vimeo.com/97507575">Scott Wlaschin - Domain modelling with the F# type system</a> from <a href="http://vimeo.com/ndcoslo">NDC Conferences</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
-
-***
-
-# Modularize
 
 ***
 
@@ -448,14 +477,14 @@ open Frank
 open System.Web.Http.HttpResource
 
 module Sample =
-    let getHandler (request: HttpRequestMessage) = async {
-        return request.CreateResponse()
-    }
-    let postHandler (request: HttpRequestMessage) = async {
-        let! value = request.Content.ReadAsStringAsync() |> Async.AwaitTask
-        // Do something with value
-        return request.CreateResponse(HttpStatusCode.Created, value)
-    }
+    let getHandler (request: Req) =
+        async { return request.CreateResponse() }
+
+    let postHandler (request: Req) =
+        async {
+            let! value = request.Content.ReadAsStringAsync() |> Async.AwaitTask
+            // Do something with value
+            return request.CreateResponse(HttpStatusCode.Created, value) }
 
     let sampleResource =
         routeResource "/api/sample"
@@ -468,27 +497,25 @@ module Sample =
 
 ***
 
-# Resources
+## Demo: Simplify
 
 ***
 
-## [F# Software Foundation](http://fsharp.org/guides/web)
+## Take Aways
+
+* You can rapidly develop (or prototype) production web applications with F# today.
+* Focus on your domain over your web framework. The latter should serve the former.
+* Frameworks can over-complicate and prevent composition. Try simplifying for better composition.
 
 ***
 
-## [Community for F#](http://c4fsharp.net/)
+## Resources
 
-***
-
-## Sergey Tihon's [F# Weekly](http://sergeytihon.wordpress.com/category/f-weekly/)
-
-***
-
-## [F# for Fun and Profit](http://fsharpforfunandprofit.com/)
-
-***
-
-## [Real World Functional Programming](http://msdn.microsoft.com/en-us/library/vstudio/hh314518(v=vs.100).aspx) on MSDN
+* [F# Software Foundation](http://fsharp.org/guides/web)
+* [Community for F#](http://c4fsharp.net/)
+* Sergey Tihon's [F# Weekly](http://sergeytihon.wordpress.com/category/f-weekly/)
+* [F# for Fun and Profit](http://fsharpforfunandprofit.com/)
+* [Real World Functional Programming](http://msdn.microsoft.com/en-us/library/vstudio/hh314518(v=vs.100).aspx) on MSDN
 
 ***
 
