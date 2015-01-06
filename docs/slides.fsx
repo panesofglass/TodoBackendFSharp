@@ -281,7 +281,7 @@ type TodosController() =
 
     member this.GetTodos() =
         async {
-            let! todos = store.GetAll()
+            let! todos = Sql.store.GetAll()
             let todos': TodoBackend.TodoStorage.Todo[] =
                 todos
                 |> Array.map (fun x ->
@@ -305,7 +305,7 @@ type SimplestFSharpHttpApp =
     HttpRequestMessage -> Async<HttpResponseMessage>
 
 let handler (request: HttpRequestMessage) = async {
-    let! todos = store.GetAll()
+    let! todos = Sql.store.GetAll()
     let todos' = todos // Do stuff
     return request.CreateResponse(todos') }
 
