@@ -45,8 +45,8 @@ let [<Literal>] key = "ConnectionString"
 AppDomain.CurrentDomain.SetData(key, connectionString)
 let connString = lazy AppDomain.CurrentDomain.GetData(key)
 
-#load "../TodoBackendFSharp/OptionConverter.fs"
-#load "../TodoBackendFSharp/TodoStorage.fs"
+#load "../TodoBackend/OptionConverter.fs"
+#load "../TodoBackend/TodoStorage.fs"
 
 open TodoBackend
 open TodoBackend.TodoStorage

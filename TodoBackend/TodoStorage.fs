@@ -144,9 +144,9 @@ module Sql =
                | null -> failwithf "invalid connection string name: %s" "Todo"
                | settings -> settings.ConnectionString
 
-    type GetAll = SqlCommandProvider<"Sql/GetAll.sql", dbTodo>
-    type Post = SqlCommandProvider<"Sql/Post.sql", dbTodo>
-    type Clear = SqlCommandProvider<"Sql/Clear.sql", dbTodo>
+    type GetAll = SqlCommandProvider<"""..\TodoBackend\Sql\GetAll.sql""", dbTodo>
+    type Post = SqlCommandProvider<"""..\TodoBackend\Sql\Post.sql""", dbTodo>
+    type Clear = SqlCommandProvider<"""..\TodoBackend\Sql\Clear.sql""", dbTodo>
     type Get = SqlCommandProvider<"
         select Id, Title, Completed, [Order]
         from Todo

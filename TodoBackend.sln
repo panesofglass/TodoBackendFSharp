@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "TodoBackend", "TodoBackendFSharp\TodoBackend.fsproj", "{E05BCEFE-F3D1-434C-9BBB-6CB277EDBDEE}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "TodoBackend", "TodoBackend\TodoBackend.fsproj", "{E05BCEFE-F3D1-434C-9BBB-6CB277EDBDEE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{72A8D85E-23B9-40AB-950B-BF6D50185F8E}"
 	ProjectSection(SolutionItems) = preProject
