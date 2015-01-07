@@ -265,12 +265,6 @@ let todo = GetTodo.Record(Id = 0, Title = "New todo", Completed = false, Order =
 
 ***
 
-# Leveraging F#
-
-![I think you should be more explicit here in step two](images/explicit.gif)
-
-***
-
 ## HTTP is Functional
 
 *)
@@ -278,11 +272,27 @@ let todo = GetTodo.Record(Id = 0, Title = "New todo", Completed = false, Order =
 type Req = HttpRequestMessage
 type Res = HttpResponseMessage
 
-type SimplestHttpApp = Req -> Res
+type Http = Req -> Res
 
-type SimplestWebApiApp = Req -> Task<Res>
+(**
 
-type SimplestFSharpApp = Req -> Async<Res>
+***
+
+## HTTP in ASP.NET Web API
+
+*)
+
+type HttpWebApi = Req -> Task<Res>
+
+(**
+
+***
+
+## HTTP in F#
+
+*)
+
+type HttpFSharp = Req -> Async<Res>
 
 (**
 
@@ -292,10 +302,16 @@ type SimplestFSharpApp = Req -> Async<Res>
 
 *)
 
-type ``Simplest?`` = Req -> Async<Res>
+type HiddenState = Req -> Async<Res>
 
-type StateTransitions<'T> =
-    Req -> (Req -> Async<'T>) -> ('T -> Async<'T>) -> Async<Res>
+type ExplicitState<'T> =
+    Req ->
+     // Retrieve resource state from the `Req`
+     (Req -> Async<'T>) ->
+     // Execute domain logic
+     ('T -> Async<'T>) ->
+     // Generate the response
+     Async<Res>
 
 (**
 
@@ -359,6 +375,8 @@ type TodosController() =
 ***
 
 # Modularize for Composition
+
+![I think you should be more explicit here in step two](images/explicit.gif)
 
 ***
 
