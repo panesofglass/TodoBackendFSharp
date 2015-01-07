@@ -376,8 +376,6 @@ type TodosController() =
 
 # Modularize for Composition
 
-![I think you should be more explicit here in step two](images/explicit.gif)
-
 ***
 
 ## Extract the handler function
@@ -487,7 +485,13 @@ module App =
 
 ***
 
-## Remaining Problems:
+## Remaining Problems
+
+![I think you should be more explicit here in step two](images/explicit.gif)
+
+***
+
+## Remaining Problems
 
 * The Web API controller cannot be nested under a `module`
 * Web API controller must be named with `Controller` as the suffix
