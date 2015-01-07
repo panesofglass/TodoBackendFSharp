@@ -82,6 +82,7 @@ open TodoBackend.TodoStorage
   - Data access
   - Web APIs
   - Domain mapping
+  - Simplify
 - Questions
 
 ***
@@ -190,11 +191,7 @@ Est. 2014
 
 ***
 
-# F# on the Web
-
-***
-
-## Getting Started
+# Getting Started
 
 * [Web Programming with F#](http://fsharp.org/guides/web/)
 * [F# MVC 5 Templates](https://visualstudiogallery.msdn.microsoft.com/39ae8dec-d11a-4ac9-974e-be0fdadec71b)
@@ -265,6 +262,10 @@ let todo = GetTodo.Record(Id = 0, Title = "New todo", Completed = false, Order =
 
 ***
 
+# F# on the Web
+
+***
+
 ## HTTP is Functional
 
 *)
@@ -309,7 +310,7 @@ type ExplicitState<'T> =
      // Retrieve resource state from the `Req`
      (Req -> Async<'T>) ->
      // Execute domain logic
-     ('T -> Async<'T>) ->
+     ('T -> 'T) ->    // or ('T -> Async<'T>)
      // Generate the response
      Async<Res>
 
@@ -421,7 +422,7 @@ type TodoController() =
 
 let getResource (request: Req) = async {
     let! todos = Sql.store.GetAll()
-    return request, todos }
+    return request.RequestUri, todos }
 
 (**
 
@@ -431,16 +432,16 @@ let getResource (request: Req) = async {
 
 *)
 
-let mapValues (request: Req, todos: NewTodo[]) =
+let mapValues (uri: Uri, todos: NewTodo[]) =
     let todos' =
         todos
         |> Array.map (fun x ->
-            { Url = Uri(request.RequestUri.AbsoluteUri + x.Id.ToString())
+            { Url = Uri(uri.AbsoluteUri + x.Id.ToString())
               Title = x.Title
               Completed = x.Completed
               Order = x.Order })
         |> Seq.toArray
-    request, todos'
+    uri, todos'
 
 (**
 
@@ -450,11 +451,10 @@ let mapValues (request: Req, todos: NewTodo[]) =
 
 *)
 
-let makeHandler map1 map2 request =
-    async {
-        let! res = map1 request
-        let (req: Req, values) = map2 res
-        return req.CreateResponse(values) }
+let makeHandler requestF domainF (request: Req) = async {
+    let! res = requestF request
+    let (_, values) = domainF res
+    return request.CreateResponse(values) }
 
 let handler request = makeHandler getResource mapValues request
 
@@ -476,11 +476,10 @@ module Web =
     let wrapResponse value (request: Req) = request.CreateResponse(value)
 
 module App =
-    let handle request =
-        async {
-            let! value = Web.unwrapRequest request
-            let value' = Domain.domainLogic value
-            return Web.wrapResponse value' request }
+    let handle request = async {
+        let! value = Web.unwrapRequest request
+        let value' = Domain.domainLogic value
+        return Web.wrapResponse value' request }
 (**
 
 ***
@@ -506,14 +505,13 @@ open Frank
 open System.Web.Http.HttpResource
 
 module Sample =
-    let getHandler (request: Req) =
-        async { return request.CreateResponse() }
+    let getHandler (request: Req) = async {
+        return request.CreateResponse() }
 
-    let postHandler (request: Req) =
-        async {
-            let! value = request.Content.ReadAsStringAsync() |> Async.AwaitTask
-            // Do something with value
-            return request.CreateResponse(HttpStatusCode.Created, value) }
+    let postHandler (request: Req) = async {
+        let! value = request.Content.ReadAsStringAsync() |> Async.AwaitTask
+        // Do something with value
+        return request.CreateResponse(HttpStatusCode.Created, value) }
 
     let sampleResource =
         routeResource "/api/sample"
@@ -526,15 +524,19 @@ module Sample =
 
 ***
 
-## Demo: Simplify
+## Demo:
+## Simplify
 
 ***
 
 ## Take Aways
 
-* You can rapidly develop (or prototype) production web applications with F# today.
-* Focus on your domain over your web framework. The latter should serve the former.
-* Frameworks can over-complicate and prevent composition. Try simplifying for better composition.
+F# is:
+
+* Production-ready
+* Facilitates rapid development (and prototyping)
+* Shifts focus to domain
+* Provides simple composition
 
 ***
 
