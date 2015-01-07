@@ -87,11 +87,12 @@ open TodoBackend.TodoStorage
 ***
 
 # Tachyus
-### Est. 2014
 
-* Measure
-* Analyze
-* Produce
+### Measure
+### Analyze
+### Produce
+
+Est. 2014
 
 ***
 
@@ -108,8 +109,16 @@ open TodoBackend.TodoStorage
 
 ***
 
+## Team
+
+* 11 total
+* 5 Software Engineering Team
+* 3 Experienced F# Developers
+* 2 Visual F# MVPs
+
+***
+
 ## Modular SPA
-### D3 + Kendo UI
 
 * Monitoring
 * Reporting
@@ -119,7 +128,6 @@ open TodoBackend.TodoStorage
 ***
 
 ## Mobile
-### F# + Xamarin
 
 * Data collection
 * Synchronization
@@ -127,7 +135,6 @@ open TodoBackend.TodoStorage
 ***
 
 ## Web APIs
-### F# + OWIN + ASP.NET Web API
 
 * Mobile sync API
 * Calculation engines for reports and monitoring
