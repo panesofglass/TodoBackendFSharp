@@ -470,8 +470,8 @@ module Domain =
     let domainLogic (value: string) = value.ToUpper()
 
 module Web =
-    let unwrapRequest (request: Req) =
-        async { return! request.Content.ReadAsStringAsync() |> Async.AwaitTask }
+    let unwrapRequest (request: Req) = async {
+        return! request.Content.ReadAsStringAsync() |> Async.AwaitTask }
 
     let wrapResponse value (request: Req) = request.CreateResponse(value)
 
@@ -494,6 +494,7 @@ module App =
 
 * The Web API controller cannot be nested under a `module`
 * Web API controller must be named with `Controller` as the suffix
+* Routing has implementation-related limitations
 
 ***
 
@@ -529,9 +530,7 @@ module Sample =
 
 ***
 
-## Take Aways
-
-F# is:
+## F# + Web Take Aways
 
 * Production-ready
 * Facilitates rapid development (and prototyping)
