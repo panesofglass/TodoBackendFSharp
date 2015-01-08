@@ -251,7 +251,9 @@ let result =
         return! cmd.AsyncExecute(id = 1) }
     |> Async.RunSynchronously
 
-let todo = GetTodo.Record(Id = 0, Title = "New todo", Completed = false, Order = 1)
+let todo1 = GetTodo.Record(0, "New todo", false, 1)
+let todo2 = GetTodo.Record(Id = 0, Title = "New todo",
+                           Completed = false, Order = 2)
 
 (**
 
@@ -451,12 +453,12 @@ let mapValues (uri: Uri, todos: NewTodo[]) =
 
 *)
 
-let makeHandler requestF domainF (request: Req) = async {
+let makeHandler (request: Req) requestF domainF = async {
     let! res = requestF request
     let (_, values) = domainF res
     return request.CreateResponse(values) }
 
-let handler request = makeHandler getResource mapValues request
+let handler request = makeHandler request getResource mapValues
 
 (**
 
