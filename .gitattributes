@@ -9,4 +9,5 @@
 *.png binary diff=exif
 *.jpg binary diff=exif
 *.gif binary diff=exif
+*.exe binary
 
